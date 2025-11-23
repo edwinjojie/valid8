@@ -40,7 +40,7 @@ export default function ReportsPage() {
   ]
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 space-y-4">
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {metrics.map((metric) => (
@@ -50,9 +50,9 @@ export default function ReportsPage() {
             </CardHeader>
             <CardContent>
               <div className="flex items-end justify-between">
-                <div className="text-2xl font-bold text-cyan-400">{metric.value}</div>
+                <div className="text-2xl font-bold text-primary">{metric.value}</div>
                 <div
-                  className={`flex items-center gap-1 text-xs font-medium ${metric.positive ? "text-emerald-400" : "text-red-400"}`}
+                  className={`flex items-center gap-1 text-xs font-medium ${metric.positive ? "text-green-600 dark:text-green-400" : "text-destructive"}`}
                 >
                   {metric.positive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                   {metric.change}
@@ -72,27 +72,27 @@ export default function ReportsPage() {
         <CardContent>
           <div className="space-y-4">
             {reports.map((report, i) => (
-              <div key={i} className="p-4 bg-slate-800/30 rounded border border-slate-700 space-y-3">
+              <div key={i} className="p-4 bg-muted/50 rounded border border-border space-y-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="font-medium text-slate-100">{report.name}</h4>
-                    <p className="text-xs text-slate-500">{report.date}</p>
+                    <h4 className="font-medium text-foreground">{report.name}</h4>
+                    <p className="text-xs text-muted-foreground">{report.date}</p>
                   </div>
-                  <span className="text-sm font-bold text-cyan-400">{report.records} providers</span>
+                  <span className="text-sm font-bold text-primary">{report.records} providers</span>
                 </div>
 
                 <div className="grid grid-cols-3 gap-2">
-                  <div className="p-2 bg-slate-900/50 rounded">
-                    <p className="text-xs text-slate-500 mb-1">High Confidence</p>
-                    <p className="text-sm font-bold text-emerald-400">{report.highConfidence}</p>
+                  <div className="p-2 bg-background rounded">
+                    <p className="text-xs text-muted-foreground mb-1">High Confidence</p>
+                    <p className="text-sm font-bold text-green-600 dark:text-green-400">{report.highConfidence}</p>
                   </div>
-                  <div className="p-2 bg-slate-900/50 rounded">
-                    <p className="text-xs text-slate-500 mb-1">Medium Confidence</p>
-                    <p className="text-sm font-bold text-amber-400">{report.mediumConfidence}</p>
+                  <div className="p-2 bg-background rounded">
+                    <p className="text-xs text-muted-foreground mb-1">Medium Confidence</p>
+                    <p className="text-sm font-bold text-amber-600 dark:text-amber-400">{report.mediumConfidence}</p>
                   </div>
-                  <div className="p-2 bg-slate-900/50 rounded">
-                    <p className="text-xs text-slate-500 mb-1">Low Confidence</p>
-                    <p className="text-sm font-bold text-red-400">{report.lowConfidence}</p>
+                  <div className="p-2 bg-background rounded">
+                    <p className="text-xs text-muted-foreground mb-1">Low Confidence</p>
+                    <p className="text-sm font-bold text-destructive">{report.lowConfidence}</p>
                   </div>
                 </div>
 
@@ -100,7 +100,7 @@ export default function ReportsPage() {
                   <Button
                     size="sm"
                     variant="outline"
-                    className="border-slate-600 text-slate-200 hover:bg-slate-800 bg-transparent"
+                    className="border-input text-foreground hover:bg-muted bg-transparent"
                   >
                     <Download className="w-3 h-3 mr-1" />
                     CSV
@@ -108,7 +108,7 @@ export default function ReportsPage() {
                   <Button
                     size="sm"
                     variant="outline"
-                    className="border-slate-600 text-slate-200 hover:bg-slate-800 bg-transparent"
+                    className="border-input text-foreground hover:bg-muted bg-transparent"
                   >
                     <Download className="w-3 h-3 mr-1" />
                     PDF
@@ -130,29 +130,29 @@ export default function ReportsPage() {
           <div className="space-y-4">
             <div>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm text-slate-300">High Confidence (90-100%)</span>
-                <span className="text-sm font-bold text-emerald-400">89.9%</span>
+                <span className="text-sm text-muted-foreground">High Confidence (90-100%)</span>
+                <span className="text-sm font-bold text-green-600 dark:text-green-400">89.9%</span>
               </div>
-              <div className="h-2 bg-slate-800 rounded overflow-hidden">
-                <div className="h-full bg-emerald-500" style={{ width: "89.9%" }}></div>
+              <div className="h-2 bg-secondary rounded overflow-hidden">
+                <div className="h-full bg-green-500" style={{ width: "89.9%" }}></div>
               </div>
             </div>
             <div>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm text-slate-300">Medium Confidence (75-89%)</span>
-                <span className="text-sm font-bold text-amber-400">8.9%</span>
+                <span className="text-sm text-muted-foreground">Medium Confidence (75-89%)</span>
+                <span className="text-sm font-bold text-amber-600 dark:text-amber-400">8.9%</span>
               </div>
-              <div className="h-2 bg-slate-800 rounded overflow-hidden">
+              <div className="h-2 bg-secondary rounded overflow-hidden">
                 <div className="h-full bg-amber-500" style={{ width: "8.9%" }}></div>
               </div>
             </div>
             <div>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm text-slate-300">Low Confidence (&lt;75%)</span>
-                <span className="text-sm font-bold text-red-400">1.2%</span>
+                <span className="text-sm text-muted-foreground">Low Confidence (&lt;75%)</span>
+                <span className="text-sm font-bold text-destructive">1.2%</span>
               </div>
-              <div className="h-2 bg-slate-800 rounded overflow-hidden">
-                <div className="h-full bg-red-500" style={{ width: "1.2%" }}></div>
+              <div className="h-2 bg-secondary rounded overflow-hidden">
+                <div className="h-full bg-destructive" style={{ width: "1.2%" }}></div>
               </div>
             </div>
           </div>
@@ -161,11 +161,11 @@ export default function ReportsPage() {
 
       {/* Export Section */}
       <div className="flex gap-2">
-        <Button className="bg-cyan-600 hover:bg-cyan-700 text-white flex-1">
+        <Button className="bg-primary hover:bg-primary/90 text-primary-foreground flex-1">
           <Download className="w-4 h-4 mr-2" />
           Export Full Report
         </Button>
-        <Button variant="outline" className="border-slate-600 text-slate-200 hover:bg-slate-800 flex-1 bg-transparent">
+        <Button variant="outline" className="border-input text-foreground hover:bg-muted flex-1 bg-transparent">
           Schedule Report
         </Button>
       </div>

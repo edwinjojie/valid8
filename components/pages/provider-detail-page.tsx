@@ -46,15 +46,15 @@ const sampleProvider = {
 
 export default function ProviderDetailPage({ onBack }: ProviderDetailPageProps) {
   return (
-    <div className="p-6 space-y-6 max-w-4xl mx-auto">
+    <div className="p-4 space-y-4 max-w-4xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
-        <Button onClick={onBack} variant="ghost" size="icon" className="text-slate-400 hover:text-slate-200">
+        <Button onClick={onBack} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
           <ArrowLeft className="w-4 h-4" />
         </Button>
         <div className="flex-1">
-          <h2 className="text-2xl font-bold text-slate-100">{sampleProvider.name}</h2>
-          <p className="text-sm text-slate-500">NPI: {sampleProvider.npi}</p>
+          <h2 className="text-2xl font-bold text-foreground">{sampleProvider.name}</h2>
+          <p className="text-sm text-muted-foreground">NPI: {sampleProvider.npi}</p>
         </div>
         <div className="text-right">
           <span className={`px-4 py-2 rounded font-medium inline-block ${"health-badge-high"}`}>
@@ -70,8 +70,8 @@ export default function ProviderDetailPage({ onBack }: ProviderDetailPageProps) 
             <CardDescription>Status</CardDescription>
           </CardHeader>
           <CardContent className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            <span className="text-sm font-medium text-emerald-400">Validated</span>
+            <CheckCircle2 className="w-4 h-4 text-green-600 dark:text-green-400" />
+            <span className="text-sm font-medium text-green-600 dark:text-green-400">Validated</span>
           </CardContent>
         </Card>
         <Card className="stats-border">
@@ -79,7 +79,7 @@ export default function ProviderDetailPage({ onBack }: ProviderDetailPageProps) 
             <CardDescription>Issues</CardDescription>
           </CardHeader>
           <CardContent>
-            <span className="text-2xl font-bold text-emerald-400">0</span>
+            <span className="text-2xl font-bold text-green-600 dark:text-green-400">0</span>
           </CardContent>
         </Card>
         <Card className="stats-border">
@@ -87,7 +87,7 @@ export default function ProviderDetailPage({ onBack }: ProviderDetailPageProps) 
             <CardDescription>Last Updated</CardDescription>
           </CardHeader>
           <CardContent>
-            <span className="text-sm text-slate-300">2 hours ago</span>
+            <span className="text-sm text-muted-foreground">2 hours ago</span>
           </CardContent>
         </Card>
         <Card className="stats-border">
@@ -95,7 +95,7 @@ export default function ProviderDetailPage({ onBack }: ProviderDetailPageProps) 
             <CardDescription>Reviewed</CardDescription>
           </CardHeader>
           <CardContent>
-            <span className="text-sm text-slate-300">No</span>
+            <span className="text-sm text-muted-foreground">No</span>
           </CardContent>
         </Card>
       </div>
@@ -110,10 +110,10 @@ export default function ProviderDetailPage({ onBack }: ProviderDetailPageProps) 
           {sampleProvider.confidenceBreakdown.map((item, i) => (
             <div key={i} className="space-y-2">
               <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-slate-300">{item.category}</span>
-                <span className="text-sm font-bold text-cyan-400">{item.score}%</span>
+                <span className="text-sm font-medium text-muted-foreground">{item.category}</span>
+                <span className="text-sm font-bold text-primary">{item.score}%</span>
               </div>
-              <Progress value={item.score} className="h-2 bg-slate-800" />
+              <Progress value={item.score} className="h-2 bg-secondary" />
             </div>
           ))}
         </CardContent>
@@ -129,8 +129,8 @@ export default function ProviderDetailPage({ onBack }: ProviderDetailPageProps) 
           <CardContent className="space-y-3 text-sm">
             {Object.entries(sampleProvider.original).map(([key, value]) => (
               <div key={key}>
-                <p className="text-slate-400 text-xs mb-1 uppercase">{key}</p>
-                <p className="text-slate-200">{value}</p>
+                <p className="text-muted-foreground text-xs mb-1 uppercase">{key}</p>
+                <p className="text-foreground">{value}</p>
               </div>
             ))}
           </CardContent>
@@ -144,8 +144,8 @@ export default function ProviderDetailPage({ onBack }: ProviderDetailPageProps) 
           <CardContent className="space-y-3 text-sm">
             {Object.entries(sampleProvider.validated_data).map(([key, value]) => (
               <div key={key}>
-                <p className="text-slate-400 text-xs mb-1 uppercase">{key}</p>
-                <p className="text-emerald-300">{value}</p>
+                <p className="text-muted-foreground text-xs mb-1 uppercase">{key}</p>
+                <p className="text-green-600 dark:text-green-400">{value}</p>
               </div>
             ))}
           </CardContent>
@@ -168,10 +168,10 @@ export default function ProviderDetailPage({ onBack }: ProviderDetailPageProps) 
             ].map((item, i) => (
               <div
                 key={i}
-                className="flex justify-between items-center p-2 bg-slate-800/30 rounded border border-slate-700"
+                className="flex justify-between items-center p-2 bg-muted/50 rounded border border-border"
               >
-                <span className="text-sm text-slate-300">{item.source}</span>
-                <span className="text-xs text-emerald-400">{item.status}</span>
+                <span className="text-sm text-muted-foreground">{item.source}</span>
+                <span className="text-xs text-green-600 dark:text-green-400">{item.status}</span>
               </div>
             ))}
           </div>
@@ -191,10 +191,10 @@ export default function ProviderDetailPage({ onBack }: ProviderDetailPageProps) 
               { field: "Specialty", from: "Cardiology", to: "Cardiology - Invasive" },
               { field: "Name", from: "Dr. Sarah Johnson", to: "Dr. Sarah Johnson MD" },
             ].map((item, i) => (
-              <div key={i} className="p-3 bg-slate-800/30 rounded border border-slate-700 space-y-1">
-                <p className="font-medium text-slate-200">{item.field}</p>
-                <p className="text-slate-400">
-                  <span className="line-through">{item.from}</span> → <span className="text-cyan-400">{item.to}</span>
+              <div key={i} className="p-3 bg-muted/50 rounded border border-border space-y-1">
+                <p className="font-medium text-foreground">{item.field}</p>
+                <p className="text-muted-foreground">
+                  <span className="line-through">{item.from}</span> → <span className="text-primary">{item.to}</span>
                 </p>
               </div>
             ))}
@@ -204,14 +204,14 @@ export default function ProviderDetailPage({ onBack }: ProviderDetailPageProps) 
 
       {/* Manual Edit & Review */}
       <div className="flex gap-3">
-        <Button className="bg-cyan-600 hover:bg-cyan-700 text-white flex-1">
+        <Button className="bg-primary hover:bg-primary/90 text-primary-foreground flex-1">
           <TrendingUp className="w-4 h-4 mr-2" />
           Mark as Reviewed
         </Button>
-        <Button variant="outline" className="border-slate-600 text-slate-200 hover:bg-slate-800 flex-1 bg-transparent">
+        <Button variant="outline" className="border-input text-foreground hover:bg-muted flex-1 bg-transparent">
           Edit Manually
         </Button>
-        <Button variant="outline" className="border-slate-600 text-slate-200 hover:bg-slate-800 flex-1 bg-transparent">
+        <Button variant="outline" className="border-input text-foreground hover:bg-muted flex-1 bg-transparent">
           Flag for Review
         </Button>
       </div>

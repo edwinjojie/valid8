@@ -55,7 +55,7 @@ export default function ProviderTable({ providers, onViewDetail }: ProviderTable
                 <tr key={provider.id} className="border-b border-border table-row-hover">
                   <td className="py-4 pl-4 pr-4">
                     <div className="flex items-center gap-2">
-                      {provider.validated && <CheckCircle2 className="w-4 h-4 text-accent flex-shrink-0" />}
+                      {provider.validated && <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" />}
                       <span className="text-sm text-foreground">{provider.name}</span>
                     </div>
                   </td>
@@ -83,7 +83,7 @@ export default function ProviderTable({ providers, onViewDetail }: ProviderTable
                       onClick={() => onViewDetail(provider)}
                       size="sm"
                       variant="ghost"
-                      className="text-accent hover:text-accent/80 h-8 w-8 p-0"
+                      className="text-primary hover:text-primary/80 h-8 w-8 p-0"
                     >
                       <Eye className="w-4 h-4" />
                     </Button>

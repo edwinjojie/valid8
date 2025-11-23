@@ -38,7 +38,7 @@ export default function UploadPage({ onSuccess }: UploadPageProps) {
   }
 
   return (
-    <div className="p-6 space-y-6 max-w-4xl mx-auto">
+    <div className="p-4 space-y-4 max-w-4xl mx-auto">
       {/* Upload Zone */}
       <Card className="border-2 border-dashed stats-border">
         <CardContent className="p-0">
@@ -47,12 +47,12 @@ export default function UploadPage({ onSuccess }: UploadPageProps) {
             onDragLeave={handleDrag}
             onDragOver={handleDrag}
             onDrop={handleDrop}
-            className={`p-12 text-center transition-colors ${dragActive ? "bg-cyan-500/10 border-cyan-500" : ""}`}
+            className={`p-12 text-center transition-colors ${dragActive ? "bg-primary/10 border-primary" : ""}`}
           >
-            <Upload className="w-12 h-12 text-cyan-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-slate-100 mb-2">Drop files here to upload</h3>
-            <p className="text-sm text-slate-400 mb-4">Supports CSV, PDF, and image files (JPG, PNG, TIFF)</p>
-            <Button className="bg-cyan-600 hover:bg-cyan-700 text-white">Browse Files</Button>
+            <Upload className="w-12 h-12 text-primary mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-foreground mb-2">Drop files here to upload</h3>
+            <p className="text-sm text-muted-foreground mb-4">Supports CSV, PDF, and image files (JPG, PNG, TIFF)</p>
+            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">Browse Files</Button>
           </div>
         </CardContent>
       </Card>
@@ -69,16 +69,16 @@ export default function UploadPage({ onSuccess }: UploadPageProps) {
               {files.map((file, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between p-3 bg-slate-800/30 rounded border border-slate-700 hover:bg-slate-800/50 transition-colors"
+                  className="flex items-center justify-between p-3 bg-muted/50 rounded border border-border hover:bg-muted transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <File className="w-4 h-4 text-slate-400" />
+                    <File className="w-4 h-4 text-muted-foreground" />
                     <div>
-                      <p className="text-sm text-slate-200">{file.name}</p>
-                      <p className="text-xs text-slate-500">{(file.size / 1024).toFixed(2)} KB</p>
+                      <p className="text-sm text-foreground">{file.name}</p>
+                      <p className="text-xs text-muted-foreground">{(file.size / 1024).toFixed(2)} KB</p>
                     </div>
                   </div>
-                  <button onClick={() => removeFile(i)} className="text-slate-400 hover:text-red-400 transition-colors">
+                  <button onClick={() => removeFile(i)} className="text-muted-foreground hover:text-destructive transition-colors">
                     <X className="w-4 h-4" />
                   </button>
                 </div>
@@ -89,16 +89,16 @@ export default function UploadPage({ onSuccess }: UploadPageProps) {
       )}
 
       {/* Help Text */}
-      <Card className="stats-border bg-slate-800/20">
+      <Card className="stats-border bg-muted/20">
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <CheckCircle2 className="w-4 h-4 text-green-600 dark:text-green-400" />
             What happens next
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
-          <p className="text-sm text-slate-300">Files will be processed through our validation pipeline:</p>
-          <ul className="text-sm text-slate-400 space-y-1 list-disc list-inside">
+          <p className="text-sm text-muted-foreground">Files will be processed through our validation pipeline:</p>
+          <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
             <li>OCR extraction (PDFs & images)</li>
             <li>NPI validation against CMS database</li>
             <li>Address verification via Google Maps</li>
@@ -110,10 +110,10 @@ export default function UploadPage({ onSuccess }: UploadPageProps) {
 
       {/* Action Buttons */}
       <div className="flex gap-3">
-        <Button onClick={onSuccess} disabled={files.length === 0} className="bg-cyan-600 hover:bg-cyan-700 text-white">
+        <Button onClick={onSuccess} disabled={files.length === 0} className="bg-primary hover:bg-primary/90 text-primary-foreground">
           Start Validation
         </Button>
-        <Button variant="outline" className="border-slate-600 text-slate-200 hover:bg-slate-800 bg-transparent">
+        <Button variant="outline" className="border-input text-foreground hover:bg-muted bg-transparent">
           Save Draft
         </Button>
       </div>

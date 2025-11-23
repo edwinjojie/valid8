@@ -40,7 +40,7 @@ export default function ResultsDashboardPage({ onViewDetail }: ResultsDashboardP
   }, [searchTerm, filters])
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 space-y-4">
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="stats-border">
@@ -48,7 +48,7 @@ export default function ResultsDashboardPage({ onViewDetail }: ResultsDashboardP
             <CardDescription>Total Providers</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-cyan-400">{mockProviders.length}</div>
+            <div className="text-2xl font-bold text-primary">{mockProviders.length}</div>
           </CardContent>
         </Card>
         <Card className="stats-border">
@@ -56,7 +56,7 @@ export default function ResultsDashboardPage({ onViewDetail }: ResultsDashboardP
             <CardDescription>High Confidence</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-emerald-400">
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400">
               {mockProviders.filter((p) => p.confidence >= 90).length}
             </div>
           </CardContent>
@@ -66,7 +66,7 @@ export default function ResultsDashboardPage({ onViewDetail }: ResultsDashboardP
             <CardDescription>Avg Confidence Score</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-cyan-400">
+            <div className="text-2xl font-bold text-primary">
               {(mockProviders.reduce((sum, p) => sum + p.confidence, 0) / mockProviders.length).toFixed(1)}%
             </div>
           </CardContent>
@@ -76,7 +76,7 @@ export default function ResultsDashboardPage({ onViewDetail }: ResultsDashboardP
             <CardDescription>Issues Found</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-amber-400">
+            <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">
               {mockProviders.filter((p) => p.issues.length > 0).length}
             </div>
           </CardContent>
@@ -91,26 +91,26 @@ export default function ResultsDashboardPage({ onViewDetail }: ResultsDashboardP
         <CardContent className="space-y-4">
           <div className="flex gap-2">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 placeholder="Search by name, NPI, or phone..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-slate-800/50 border-slate-600 text-slate-100 placeholder:text-slate-500"
+                className="pl-10 bg-background border-input text-foreground placeholder:text-muted-foreground"
               />
             </div>
-            <Button variant="outline" className="border-slate-600 text-slate-200 hover:bg-slate-800 bg-transparent">
+            <Button variant="outline" className="border-input text-foreground hover:bg-muted bg-transparent">
               <Filter className="w-4 h-4" />
             </Button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div>
-              <label className="text-xs text-slate-400 block mb-2">Confidence Level</label>
+              <label className="text-xs text-muted-foreground block mb-2">Confidence Level</label>
               <select
                 value={filters.confidence}
                 onChange={(e) => setFilters({ ...filters, confidence: e.target.value })}
-                className="w-full bg-slate-800/50 border border-slate-600 rounded px-3 py-2 text-sm text-slate-200"
+                className="w-full bg-background border border-input rounded px-3 py-2 text-sm text-foreground"
               >
                 <option value="all">All Confidence Levels</option>
                 <option value="high">High (90%+)</option>
@@ -119,11 +119,11 @@ export default function ResultsDashboardPage({ onViewDetail }: ResultsDashboardP
               </select>
             </div>
             <div>
-              <label className="text-xs text-slate-400 block mb-2">Specialty</label>
+              <label className="text-xs text-muted-foreground block mb-2">Specialty</label>
               <select
                 value={filters.specialty}
                 onChange={(e) => setFilters({ ...filters, specialty: e.target.value })}
-                className="w-full bg-slate-800/50 border border-slate-600 rounded px-3 py-2 text-sm text-slate-200"
+                className="w-full bg-background border border-input rounded px-3 py-2 text-sm text-foreground"
               >
                 <option value="all">All Specialties</option>
                 <option value="Cardiology">Cardiology</option>
@@ -133,11 +133,11 @@ export default function ResultsDashboardPage({ onViewDetail }: ResultsDashboardP
               </select>
             </div>
             <div>
-              <label className="text-xs text-slate-400 block mb-2">Location</label>
+              <label className="text-xs text-muted-foreground block mb-2">Location</label>
               <select
                 value={filters.location}
                 onChange={(e) => setFilters({ ...filters, location: e.target.value })}
-                className="w-full bg-slate-800/50 border border-slate-600 rounded px-3 py-2 text-sm text-slate-200"
+                className="w-full bg-background border border-input rounded px-3 py-2 text-sm text-foreground"
               >
                 <option value="all">All Locations</option>
                 <option value="NY">New York</option>
@@ -155,11 +155,11 @@ export default function ResultsDashboardPage({ onViewDetail }: ResultsDashboardP
 
       {/* Export Options */}
       <div className="flex gap-2">
-        <Button className="bg-cyan-600 hover:bg-cyan-700 text-white flex items-center gap-2">
+        <Button className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2">
           <Download className="w-4 h-4" />
           Export as CSV
         </Button>
-        <Button variant="outline" className="border-slate-600 text-slate-200 hover:bg-slate-800 bg-transparent">
+        <Button variant="outline" className="border-input text-foreground hover:bg-muted bg-transparent">
           Export as PDF
         </Button>
       </div>

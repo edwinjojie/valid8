@@ -17,7 +17,7 @@ export default function Valid8Care() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
   return (
-    <div className="flex h-screen bg-slate-950">
+    <div className="flex h-screen bg-background">
       {/* Sidebar */}
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
@@ -27,7 +27,7 @@ export default function Valid8Care() {
         <TopNav pageTitle={getPageTitle(currentPage)} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         {/* Page Content */}
-        <div className="flex-1 overflow-auto bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+        <div className="flex-1 overflow-auto bg-background">
           {currentPage === "dashboard" && <DashboardPage setCurrentPage={setCurrentPage} />}
           {currentPage === "upload" && <UploadPage onSuccess={() => setCurrentPage("progress")} />}
           {currentPage === "progress" && <ValidationProgressPage onComplete={() => setCurrentPage("results")} />}
@@ -49,7 +49,7 @@ function DashboardPage({ setCurrentPage }: { setCurrentPage: (page: string) => v
   ]
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 space-y-4">
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {stats.map((stat) => {
@@ -59,14 +59,14 @@ function DashboardPage({ setCurrentPage }: { setCurrentPage: (page: string) => v
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <CardDescription className="text-slate-400">{stat.label}</CardDescription>
+                    <CardDescription className="text-muted-foreground">{stat.label}</CardDescription>
                     <CardTitle className="text-2xl mt-2">{stat.value}</CardTitle>
                   </div>
-                  <Icon className="w-5 h-5 text-cyan-400 mt-1" />
+                  <Icon className="w-5 h-5 text-primary mt-1" />
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-xs text-emerald-400">{stat.change} from last month</p>
+                <p className="text-xs text-green-600 dark:text-green-400">{stat.change} from last month</p>
               </CardContent>
             </Card>
           )
@@ -82,7 +82,7 @@ function DashboardPage({ setCurrentPage }: { setCurrentPage: (page: string) => v
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <Button
               onClick={() => setCurrentPage("upload")}
-              className="bg-cyan-600 hover:bg-cyan-700 text-white flex items-center gap-2"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2"
             >
               <FileUp className="w-4 h-4" />
               Upload New File
@@ -90,14 +90,14 @@ function DashboardPage({ setCurrentPage }: { setCurrentPage: (page: string) => v
             <Button
               onClick={() => setCurrentPage("results")}
               variant="outline"
-              className="border-slate-600 text-slate-200 hover:bg-slate-800"
+              className="border-border text-foreground hover:bg-muted"
             >
               View Last Results
             </Button>
             <Button
               onClick={() => setCurrentPage("reports")}
               variant="outline"
-              className="border-slate-600 text-slate-200 hover:bg-slate-800"
+              className="border-border text-foreground hover:bg-muted"
             >
               Generate Report
             </Button>
@@ -119,13 +119,13 @@ function DashboardPage({ setCurrentPage }: { setCurrentPage: (page: string) => v
             ].map((item, i) => (
               <div
                 key={i}
-                className="flex justify-between items-center p-3 bg-slate-800/30 rounded border border-slate-700"
+                className="flex justify-between items-center p-3 bg-muted/50 rounded border border-border"
               >
                 <div>
-                  <p className="text-sm text-slate-300">{item.action}</p>
-                  <p className="text-xs text-slate-500">{item.file}</p>
+                  <p className="text-sm text-foreground">{item.action}</p>
+                  <p className="text-xs text-muted-foreground">{item.file}</p>
                 </div>
-                <span className="text-xs text-slate-400">{item.time}</span>
+                <span className="text-xs text-muted-foreground">{item.time}</span>
               </div>
             ))}
           </div>

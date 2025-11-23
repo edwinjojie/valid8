@@ -65,7 +65,7 @@ export default function ValidationProgressPage({ onComplete }: ValidationProgres
   ]
 
   return (
-    <div className="p-6 space-y-6 max-w-4xl mx-auto">
+    <div className="p-4 space-y-4 max-w-4xl mx-auto">
       {/* Overall Progress */}
       <Card className="stats-border">
         <CardHeader>
@@ -75,10 +75,10 @@ export default function ValidationProgressPage({ onComplete }: ValidationProgres
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-slate-300">Completion</span>
-              <span className="text-lg font-bold text-cyan-400">{Math.round(overallProgress)}%</span>
+              <span className="text-sm font-medium text-muted-foreground">Completion</span>
+              <span className="text-lg font-bold text-primary">{Math.round(overallProgress)}%</span>
             </div>
-            <Progress value={overallProgress} className="h-2 bg-slate-800" />
+            <Progress value={overallProgress} className="h-2 bg-secondary" />
           </div>
         </CardContent>
       </Card>
@@ -99,17 +99,16 @@ export default function ValidationProgressPage({ onComplete }: ValidationProgres
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Icon
-                      className={`w-4 h-4 ${
-                        isComplete ? "text-emerald-400" : isActive ? "text-cyan-400 animate-spin" : "text-slate-600"
-                      }`}
+                      className={`w-4 h-4 ${isComplete ? "text-green-600 dark:text-green-400" : isActive ? "text-primary animate-spin" : "text-muted-foreground"
+                        }`}
                     />
-                    <span className={`text-sm font-medium ${isComplete ? "text-emerald-400" : "text-slate-300"}`}>
+                    <span className={`text-sm font-medium ${isComplete ? "text-green-600 dark:text-green-400" : "text-muted-foreground"}`}>
                       {step.name}
                     </span>
                   </div>
-                  <span className="text-xs text-slate-500">{Math.round(step.progress)}%</span>
+                  <span className="text-xs text-muted-foreground">{Math.round(step.progress)}%</span>
                 </div>
-                <Progress value={step.progress} className="h-1.5 bg-slate-800" />
+                <Progress value={step.progress} className="h-1.5 bg-secondary" />
               </div>
             )
           })}
@@ -123,16 +122,16 @@ export default function ValidationProgressPage({ onComplete }: ValidationProgres
           <CardDescription>Real-time validation pipeline output</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="bg-slate-950 rounded border border-slate-700 p-4 font-mono text-xs space-y-1 max-h-64 overflow-y-auto">
+          <div className="bg-muted rounded border border-border p-4 font-mono text-xs space-y-1 max-h-64 overflow-y-auto">
             {logs.map((log, i) => (
-              <div key={i} className="text-slate-400">
-                <span className="text-cyan-400">{log.substring(0, 10)}</span>
+              <div key={i} className="text-muted-foreground">
+                <span className="text-primary">{log.substring(0, 10)}</span>
                 <span> {log.substring(10)}</span>
               </div>
             ))}
             {overallProgress < 100 && (
-              <div className="text-slate-500">
-                <span className="inline-block w-2 h-4 bg-slate-500 animate-pulse ml-1"></span>
+              <div className="text-muted-foreground">
+                <span className="inline-block w-2 h-4 bg-muted-foreground animate-pulse ml-1"></span>
               </div>
             )}
           </div>
@@ -142,12 +141,12 @@ export default function ValidationProgressPage({ onComplete }: ValidationProgres
       {/* Action Button */}
       {overallProgress >= 100 && (
         <div className="flex gap-3">
-          <Button onClick={onComplete} className="bg-emerald-600 hover:bg-emerald-700 text-white flex-1">
+          <Button onClick={onComplete} className="bg-green-600 hover:bg-green-700 text-white flex-1">
             View Results
           </Button>
           <Button
             variant="outline"
-            className="border-slate-600 text-slate-200 hover:bg-slate-800 flex-1 bg-transparent"
+            className="border-input text-foreground hover:bg-muted flex-1 bg-transparent"
           >
             Download Log
           </Button>
