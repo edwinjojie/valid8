@@ -24,7 +24,7 @@ GROQ_API_KEY=your_groq_api_key_here
 # or
 OPENAI_API_KEY=your_openai_api_key_here
 # or
-LLM_API_KEY=your_api_key_here  # generic fallback
+LLM_API_KEY=AIzaSyDhn6phv9xD5RMj5myDRjmsWNV_vDdmuew  # generic fallback
 ```
 
 ### 3. Run Locally

@@ -52,6 +52,11 @@ LLM_CONFIGS = {
         "endpoint": "https://api.anthropic.com/v1/messages",
         "model": "claude-3-5-sonnet-20241022",
         "api_key_header": "x-api-key"
+    },
+    "gemini": {
+        "endpoint": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+        "model": "gemini-1.5-flash",
+        "api_key_header": "x-goog-api-key"
     }
 }
 
@@ -245,6 +250,22 @@ async def call_llm_for_cleaning(prompt: str) -> Dict[str, Any]:
                 }
             ]
         }
+    elif LLM_PROVIDER == "gemini":
+        payload = {
+            "contents": [
+                {
+                    "parts": [
+                        {
+                            "text": prompt
+                        }
+                    ]
+                }
+            ],
+            "generationConfig": {
+                "temperature": 0.1,
+                "maxOutputTokens": 4096
+            }
+        }
     else:  # OpenAI-compatible (Groq, OpenAI)
         payload = {
             "model": config["model"],
@@ -263,9 +284,15 @@ async def call_llm_for_cleaning(prompt: str) -> Dict[str, Any]:
         }
     
     try:
+        # Gemini uses API key as query parameter
+        if LLM_PROVIDER == "gemini":
+            endpoint = f"{config['endpoint']}?key={LLM_API_KEY}"
+        else:
+            endpoint = config["endpoint"]
+        
         async with httpx.AsyncClient(timeout=120.0) as client:
             response = await client.post(
-                config["endpoint"],
+                endpoint,
                 headers=headers,
                 json=payload
             )
@@ -275,6 +302,8 @@ async def call_llm_for_cleaning(prompt: str) -> Dict[str, Any]:
             # Extract content based on provider response format
             if LLM_PROVIDER == "anthropic":
                 content = result["content"][0]["text"]
+            elif LLM_PROVIDER == "gemini":
+                content = result["candidates"][0]["content"]["parts"][0]["text"]
             else:  # OpenAI-compatible
                 content = result["choices"][0]["message"]["content"]
             
