@@ -15,7 +15,8 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 import httpx
-
+from dotenv import load_dotenv
+load_dotenv()
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
@@ -54,10 +55,11 @@ LLM_CONFIGS = {
         "api_key_header": "x-api-key"
     },
     "gemini": {
-        "endpoint": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
-        "model": "gemini-1.5-flash",
-        "api_key_header": "x-goog-api-key"
-    }
+    "endpoint": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent",
+    "model": "gemini-1.5-flash-latest",
+    "api_key_header": "x-goog-api-key"
+}
+
 }
 
 MAX_ROWS_TO_SAMPLE = 50  # Send first N rows to LLM for processing
