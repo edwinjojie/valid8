@@ -1,6 +1,6 @@
 """
 Valid8 Ingestion Microservice (Gemini SDK version)
-- Uses google.generativeai SDK with gemini-2.5-flash by default.
+- Uses google.generativeai SDK with gemini-1.5-flash by default.
 - Safer: retries, robust JSON extraction, runs blocking SDK calls off the event loop.
 """
 
