@@ -1,6 +1,6 @@
 """
 Valid8 Validation Microservice (Gemini SDK version)
-- Uses google.generativeai SDK with gemini-1.5-flash by default.
+- Uses google.generativeai SDK with gemini-2.5-flash by default.
 - Performs provider validation against external NPI reference data.
 - Independent microservice (does NOT depend on ingestion service internals).
 """
@@ -29,7 +29,7 @@ load_dotenv()
 # CONFIG
 # -----------------------------------------------------------------------------
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_MODEL = os.getenv("GEMINI_VALIDATION_MODEL", "gemini-1.5-flash")
+GEMINI_MODEL = os.getenv("GEMINI_VALIDATION_MODEL", "gemini-2.5-flash")
 RETRY_ATTEMPTS = int(os.getenv("LLM_RETRY_ATTEMPTS", "3"))
 LLM_TIMEOUT_SECONDS = float(os.getenv("LLM_TIMEOUT_SECONDS", "120.0"))
 
