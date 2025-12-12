@@ -84,6 +84,18 @@ Your tasks:
 - Add validation_notes explaining changes.
 - Decide requires_manual_review = true/false.
 
+CRITICAL RULES:
+1. If INPUT_PROVIDER_DATA has NO 'npi_number', you MUST:
+   - add "Missing NPI Number" to discrepancies
+   - set requires_manual_review = true
+   - set confidence_scores.npi_number = 0.0
+
+2. If EXTERNAL_REFERENCE_DATA is empty or contains "error", but an NPI was provided:
+   - add "Invalid NPI - No match found in registry" to discrepancies
+   - set requires_manual_review = true
+
+3. If data matches the external reference, confidence should be high (0.9-1.0).
+
 Output JSON only:
 {
   "updated_fields": {...},
