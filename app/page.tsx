@@ -15,6 +15,18 @@ import ReportsPage from "@/components/pages/reports-page"
 export default function Valid8Care() {
   const [currentPage, setCurrentPage] = useState("dashboard")
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [processingFile, setProcessingFile] = useState<File | null>(null)
+  const [analysisResults, setAnalysisResults] = useState<any>(null)
+
+  const handleUploadStart = (file: File) => {
+    setProcessingFile(file)
+    setCurrentPage("progress")
+  }
+
+  const handleProcessingComplete = (results: any) => {
+    setAnalysisResults(results)
+    setCurrentPage("results")
+  }
 
   return (
     <div className="flex h-screen bg-background">
@@ -29,9 +41,9 @@ export default function Valid8Care() {
         {/* Page Content */}
         <div className="flex-1 overflow-auto bg-background">
           {currentPage === "dashboard" && <DashboardPage setCurrentPage={setCurrentPage} />}
-          {currentPage === "upload" && <UploadPage onSuccess={() => setCurrentPage("progress")} />}
-          {currentPage === "progress" && <ValidationProgressPage onComplete={() => setCurrentPage("results")} />}
-          {currentPage === "results" && <ResultsDashboardPage onViewDetail={() => setCurrentPage("detail")} />}
+          {currentPage === "upload" && <UploadPage onUploadStart={handleUploadStart} />}
+          {currentPage === "progress" && <ValidationProgressPage processingFile={processingFile} onComplete={handleProcessingComplete} />}
+          {currentPage === "results" && <ResultsDashboardPage analysisResults={analysisResults} onViewDetail={() => setCurrentPage("detail")} />}
           {currentPage === "detail" && <ProviderDetailPage onBack={() => setCurrentPage("results")} />}
           {currentPage === "reports" && <ReportsPage />}
         </div>

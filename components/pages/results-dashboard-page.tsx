@@ -1,168 +1,212 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Search, Filter, Download } from "lucide-react"
-import ProviderTable from "@/components/provider-table"
-import { mockProviders } from "@/lib/mock-data"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import { Download, AlertTriangle, CheckCircle, FileText } from "lucide-react"
 
 interface ResultsDashboardPageProps {
   onViewDetail: () => void
+  analysisResults?: any
 }
 
-export default function ResultsDashboardPage({ onViewDetail }: ResultsDashboardPageProps) {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [filters, setFilters] = useState({
-    confidence: "all",
-    specialty: "all",
-    location: "all",
-  })
+export default function ResultsDashboardPage({ onViewDetail, analysisResults }: ResultsDashboardPageProps) {
+  if (!analysisResults) {
+    return <div className="p-4">No results available. Please upload a file first.</div>
+  }
 
-  const filteredProviders = useMemo(() => {
-    return mockProviders.filter((p) => {
-      const matchesSearch =
-        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.npi.includes(searchTerm) ||
-        p.phone.includes(searchTerm)
+  const { cleaned_providers, validated_providers, cleaned_count, validated_count } = analysisResults
 
-      const matchesConfidence =
-        filters.confidence === "all" ||
-        (filters.confidence === "high" && p.confidence >= 90) ||
-        (filters.confidence === "medium" && p.confidence >= 75 && p.confidence < 90) ||
-        (filters.confidence === "low" && p.confidence < 75)
-
-      const matchesSpecialty = filters.specialty === "all" || p.specialty === filters.specialty
-
-      return matchesSearch && matchesConfidence && matchesSpecialty
-    })
-  }, [searchTerm, filters])
+  // Helper to get validation status for a provider index
+  const getValidationStatus = (index: number) => {
+    if (!validated_providers || !validated_providers[index]) return null
+    return validated_providers[index]
+  }
 
   return (
     <div className="p-4 space-y-4">
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="stats-border">
-          <CardHeader className="pb-3">
-            <CardDescription>Total Providers</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-primary">{mockProviders.length}</div>
-          </CardContent>
-        </Card>
-        <Card className="stats-border">
-          <CardHeader className="pb-3">
-            <CardDescription>High Confidence</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-              {mockProviders.filter((p) => p.confidence >= 90).length}
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="stats-border">
-          <CardHeader className="pb-3">
-            <CardDescription>Avg Confidence Score</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-primary">
-              {(mockProviders.reduce((sum, p) => sum + p.confidence, 0) / mockProviders.length).toFixed(1)}%
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="stats-border">
-          <CardHeader className="pb-3">
-            <CardDescription>Issues Found</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">
-              {mockProviders.filter((p) => p.issues.length > 0).length}
-            </div>
-          </CardContent>
-        </Card>
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold tracking-tight">Validation Results</h2>
+        <div className="flex gap-2">
+          <Button variant="outline" className="gap-2">
+            <Download className="w-4 h-4" /> Download Cleaned CSV
+          </Button>
+          <Button className="gap-2">
+            <Download className="w-4 h-4" /> Download Final Report
+          </Button>
+        </div>
       </div>
 
-      {/* Search & Filters */}
-      <Card className="stats-border">
-        <CardHeader>
-          <CardTitle className="text-base">Filter & Search</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex gap-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                placeholder="Search by name, NPI, or phone..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-background border-input text-foreground placeholder:text-muted-foreground"
-              />
-            </div>
-            <Button variant="outline" className="border-input text-foreground hover:bg-muted bg-transparent">
-              <Filter className="w-4 h-4" />
-            </Button>
+      <Tabs defaultValue="cleaned" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="cleaned">Cleaned Data Preview</TabsTrigger>
+          <TabsTrigger value="validation">Validation Results</TabsTrigger>
+          <TabsTrigger value="report">Full Report</TabsTrigger>
+        </TabsList>
+
+        {/* TAB A: Cleaned Data Preview */}
+        <TabsContent value="cleaned" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Cleaned Provider Data</CardTitle>
+              <CardDescription>
+                {cleaned_count} records processed and normalized by AI.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="rounded-md border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Specialty</TableHead>
+                      <TableHead>NPI</TableHead>
+                      <TableHead>Phone</TableHead>
+                      <TableHead>Confidence</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {cleaned_providers?.map((provider: any, i: number) => (
+                      <TableRow key={i} className="hover:bg-muted/50 cursor-pointer" onClick={onViewDetail}>
+                        <TableCell className="font-medium">{provider.name}</TableCell>
+                        <TableCell>{provider.specialty}</TableCell>
+                        <TableCell>{provider.npi_number}</TableCell>
+                        <TableCell>{provider.phone}</TableCell>
+                        <TableCell>
+                          <Badge variant={provider.confidence?.name > 0.8 ? "default" : "secondary"}>
+                            {Math.round((provider.confidence?.name || 0) * 100)}%
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* TAB B: Validation Results */}
+        <TabsContent value="validation" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Validation Discrepancies</CardTitle>
+              <CardDescription>
+                Review detected inconsistencies against external registries.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {validated_providers?.map((res: any, i: number) => {
+                  const providerName = cleaned_providers?.[i]?.name || `Provider #${i + 1}`;
+                  const hasDiscrepancies = res.discrepancies?.length > 0;
+
+                  return (
+                    <div key={i} className="border rounded-lg p-4 flex justify-between items-start bg-card">
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <h4 className="font-semibold text-lg">{providerName}</h4>
+                          {hasDiscrepancies ? (
+                            <Badge variant="destructive" className="gap-1">
+                              <AlertTriangle className="w-3 h-3" /> Risk Detected
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 gap-1">
+                              <CheckCircle className="w-3 h-3" /> Verified
+                            </Badge>
+                          )}
+                        </div>
+
+                        {hasDiscrepancies ? (
+                          <ul className="list-disc list-inside text-sm text-muted-foreground">
+                            {res.discrepancies.map((d: any, idx: number) => (
+                              <li key={idx} className="text-red-500">{typeof d === 'string' ? d : JSON.stringify(d)}</li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="text-sm text-muted-foreground">All data points match validation sources.</p>
+                        )}
+
+                        {res.validation_notes?.length > 0 && (
+                          <div className="mt-2 text-xs text-muted-foreground">
+                            <strong>Notes:</strong> {res.validation_notes.join(", ")}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="text-right">
+                        <div className="text-xs text-muted-foreground mb-1">Confidence Score</div>
+                        <div className="flex items-center gap-2 justify-end">
+                          <div className="h-2 w-24 bg-secondary rounded-full overflow-hidden">
+                            {/* Calculate simple average confidence from cleaned data as a proxy if not in validation result */}
+                            <div
+                              className="h-full bg-primary"
+                              style={{ width: `${(cleaned_providers?.[i]?.confidence?.npi_number || 0.8) * 100}%` }}
+                            />
+                          </div>
+                          <span className="font-bold text-sm">{Math.round((cleaned_providers?.[i]?.confidence?.npi_number || 0.8) * 100)}%</span>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* TAB C: Full Report */}
+        <TabsContent value="report" className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Summary Metrics</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Total Providers</span>
+                  <span className="font-bold">{cleaned_count}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Successfully Verified</span>
+                  <span className="font-bold text-green-600">
+                    {validated_providers?.filter((p: any) => !p.requires_manual_review).length || 0}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Requires Review</span>
+                  <span className="font-bold text-amber-600">
+                    {validated_providers?.filter((p: any) => p.requires_manual_review).length || 0}
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="md:col-span-2">
+              <CardHeader>
+                <CardTitle>Download Options</CardTitle>
+                <CardDescription>Export your data for downstream processing</CardDescription>
+              </CardHeader>
+              <CardContent className="grid grid-cols-2 gap-4">
+                <div className="p-4 border rounded hover:bg-muted/50 transition-colors cursor-pointer text-center space-y-2">
+                  <FileText className="w-8 h-8 mx-auto text-primary" />
+                  <h3 className="font-semibold">Full Audit Report (PDF)</h3>
+                  <p className="text-xs text-muted-foreground">Includes all discrepancies and AI reasoning logs.</p>
+                </div>
+                <div className="p-4 border rounded hover:bg-muted/50 transition-colors cursor-pointer text-center space-y-2">
+                  <Table className="w-8 h-8 mx-auto text-primary" />
+                  <h3 className="font-semibold">Cleaned Dataset (CSV)</h3>
+                  <p className="text-xs text-muted-foreground">Normalized data ready for import.</p>
+                </div>
+              </CardContent>
+            </Card>
           </div>
+        </TabsContent>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div>
-              <label className="text-xs text-muted-foreground block mb-2">Confidence Level</label>
-              <select
-                value={filters.confidence}
-                onChange={(e) => setFilters({ ...filters, confidence: e.target.value })}
-                className="w-full bg-background border border-input rounded px-3 py-2 text-sm text-foreground"
-              >
-                <option value="all">All Confidence Levels</option>
-                <option value="high">High (90%+)</option>
-                <option value="medium">Medium (75-89%)</option>
-                <option value="low">Low (&lt;75%)</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-xs text-muted-foreground block mb-2">Specialty</label>
-              <select
-                value={filters.specialty}
-                onChange={(e) => setFilters({ ...filters, specialty: e.target.value })}
-                className="w-full bg-background border border-input rounded px-3 py-2 text-sm text-foreground"
-              >
-                <option value="all">All Specialties</option>
-                <option value="Cardiology">Cardiology</option>
-                <option value="Internal Medicine">Internal Medicine</option>
-                <option value="Family Medicine">Family Medicine</option>
-                <option value="Orthopedics">Orthopedics</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-xs text-muted-foreground block mb-2">Location</label>
-              <select
-                value={filters.location}
-                onChange={(e) => setFilters({ ...filters, location: e.target.value })}
-                className="w-full bg-background border border-input rounded px-3 py-2 text-sm text-foreground"
-              >
-                <option value="all">All Locations</option>
-                <option value="NY">New York</option>
-                <option value="CA">California</option>
-                <option value="TX">Texas</option>
-                <option value="FL">Florida</option>
-              </select>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Provider Table */}
-      <ProviderTable providers={filteredProviders} onViewDetail={onViewDetail} />
-
-      {/* Export Options */}
-      <div className="flex gap-2">
-        <Button className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2">
-          <Download className="w-4 h-4" />
-          Export as CSV
-        </Button>
-        <Button variant="outline" className="border-input text-foreground hover:bg-muted bg-transparent">
-          Export as PDF
-        </Button>
-      </div>
+      </Tabs>
     </div>
   )
 }

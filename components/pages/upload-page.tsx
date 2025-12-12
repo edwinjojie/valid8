@@ -2,18 +2,19 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { Upload, File, X, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface UploadPageProps {
-  onSuccess: () => void
+  onUploadStart: (file: File) => void
 }
 
-export default function UploadPage({ onSuccess }: UploadPageProps) {
+export default function UploadPage({ onUploadStart }: UploadPageProps) {
   const [files, setFiles] = useState<File[]>([])
   const [dragActive, setDragActive] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault()
@@ -30,11 +31,24 @@ export default function UploadPage({ onSuccess }: UploadPageProps) {
     e.stopPropagation()
     setDragActive(false)
     const droppedFiles = Array.from(e.dataTransfer.files)
-    setFiles((prev) => [...prev, ...droppedFiles])
+    // Only take the first file if multiple
+    if (droppedFiles.length > 0) {
+      setFiles([droppedFiles[0]])
+    }
   }
 
   const removeFile = (index: number) => {
     setFiles((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  const handleBrowseClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFiles([e.target.files[0]])
+    }
   }
 
   return (
@@ -50,9 +64,21 @@ export default function UploadPage({ onSuccess }: UploadPageProps) {
             className={`p-12 text-center transition-colors ${dragActive ? "bg-primary/10 border-primary" : ""}`}
           >
             <Upload className="w-12 h-12 text-primary mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-foreground mb-2">Drop files here to upload</h3>
-            <p className="text-sm text-muted-foreground mb-4">Supports CSV, PDF, and image files (JPG, PNG, TIFF)</p>
-            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">Browse Files</Button>
+            <h3 className="text-lg font-semibold text-foreground mb-2">Drop CSV file here</h3>
+            <p className="text-sm text-muted-foreground mb-4">Supports CSV files for provider validation</p>
+            <Button
+              onClick={handleBrowseClick}
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            >
+              Browse Files
+            </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              className="hidden"
+              onChange={handleFileChange}
+              accept=".csv"
+            />
           </div>
         </CardContent>
       </Card>
@@ -61,8 +87,8 @@ export default function UploadPage({ onSuccess }: UploadPageProps) {
       {files.length > 0 && (
         <Card className="stats-border">
           <CardHeader>
-            <CardTitle className="text-base">Files to Upload</CardTitle>
-            <CardDescription>{files.length} file(s) selected</CardDescription>
+            <CardTitle className="text-base">File to Upload</CardTitle>
+            <CardDescription>Ready to process</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
@@ -99,22 +125,22 @@ export default function UploadPage({ onSuccess }: UploadPageProps) {
         <CardContent className="space-y-2">
           <p className="text-sm text-muted-foreground">Files will be processed through our validation pipeline:</p>
           <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
-            <li>OCR extraction (PDFs & images)</li>
-            <li>NPI validation against CMS database</li>
-            <li>Address verification via Google Maps</li>
-            <li>License board cross-reference</li>
-            <li>AI enrichment & confidence scoring</li>
+            <li>AI-powered Cleaning & Normalization</li>
+            <li>NPI Database Verification</li>
+            <li>Confidence Scoring</li>
+            <li>Discrepancy Detection</li>
           </ul>
         </CardContent>
       </Card>
 
       {/* Action Buttons */}
       <div className="flex gap-3">
-        <Button onClick={onSuccess} disabled={files.length === 0} className="bg-primary hover:bg-primary/90 text-primary-foreground">
-          Start Validation
-        </Button>
-        <Button variant="outline" className="border-input text-foreground hover:bg-muted bg-transparent">
-          Save Draft
+        <Button
+          onClick={() => files.length > 0 && onUploadStart(files[0])}
+          disabled={files.length === 0}
+          className="bg-primary hover:bg-primary/90 text-primary-foreground"
+        >
+          Upload Provider Dataset
         </Button>
       </div>
     </div>
