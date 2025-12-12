@@ -32,6 +32,10 @@ export default function ValidationProgressPage({ processingFile, onComplete }: V
     setLogs(prev => {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+      // Avoid duplicate logs if polling hits same state multiple times
+>>>>>>> Stashed changes
 =======
       // Avoid duplicate logs if polling hits same state multiple times
 >>>>>>> Stashed changes
@@ -86,9 +90,12 @@ export default function ValidationProgressPage({ processingFile, onComplete }: V
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           setOverallProgress(statusData.progress)
 
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
           // update UI based on real backend state
@@ -96,6 +103,9 @@ export default function ValidationProgressPage({ processingFile, onComplete }: V
 
           // Logging state changes based on stage
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -114,6 +124,10 @@ export default function ValidationProgressPage({ processingFile, onComplete }: V
             addLog("Process complete successfully.")
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+            // Short delay to show 100%
+>>>>>>> Stashed changes
 =======
             // Short delay to show 100%
 >>>>>>> Stashed changes
@@ -183,6 +197,7 @@ export default function ValidationProgressPage({ processingFile, onComplete }: V
             {steps.map((step, i) => {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
               let isComplete = false
               let isCurrent = false
 
@@ -198,6 +213,11 @@ export default function ValidationProgressPage({ processingFile, onComplete }: V
               // active / complete logic based on overall progress (which is now strictly controlled by backend)
 
 >>>>>>> Stashed changes
+=======
+              // Map backend stage to UI steps
+              // active / complete logic based on overall progress (which is now strictly controlled by backend)
+
+>>>>>>> Stashed changes
               let isComplete = false
               let isCurrent = false
 
@@ -206,6 +226,9 @@ export default function ValidationProgressPage({ processingFile, onComplete }: V
               } else {
                 // Manual mapping based on backend progress checkpoints
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

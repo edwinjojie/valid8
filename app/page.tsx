@@ -44,9 +44,12 @@ export default function Valid8Care() {
           {currentPage === "upload" && <UploadPage onUploadStart={handleUploadStart} />}
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           {currentPage === "progress" && <ValidationProgressPage processingFile={processingFile} onComplete={handleProcessingComplete} />}
           {currentPage === "results" && <ResultsDashboardPage analysisResults={analysisResults} onViewDetail={() => setCurrentPage("detail")} />}
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
           {currentPage === "progress" && (
@@ -62,6 +65,9 @@ export default function Valid8Care() {
             />
           )}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

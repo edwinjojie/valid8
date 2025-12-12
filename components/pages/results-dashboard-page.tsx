@@ -6,10 +6,13 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Download, AlertTriangle, CheckCircle, FileText } from "lucide-react"
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 import { Download, CheckCircle2, AlertTriangle, FileText, ExternalLink } from "lucide-react"
@@ -23,6 +26,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -33,6 +39,7 @@ interface ResultsDashboardPageProps {
   analysisResults?: any
 }
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 export default function ResultsDashboardPage({ onViewDetail, analysisResults }: ResultsDashboardPageProps) {
@@ -89,6 +96,19 @@ export default function ResultsDashboardPage({ analysisResults, onViewDetail }: 
 
   return (
 >>>>>>> Stashed changes
+=======
+export default function ResultsDashboardPage({ analysisResults, onViewDetail }: ResultsDashboardPageProps) {
+  // Use analysisResults if available, otherwise fallback to empty or mock
+  const cleanedProviders = analysisResults?.cleaned_providers || []
+  const validatedProviders = analysisResults?.validated_providers || []
+
+  // Stats
+  const total = validatedProviders.length
+  const verified = validatedProviders.filter((p: any) => !p.requires_manual_review).length
+  const reviewNeeded = total - verified
+
+  return (
+>>>>>>> Stashed changes
     <div className="p-4 space-y-4 max-w-6xl mx-auto">
 
       {/* Top Stats */}
@@ -116,6 +136,9 @@ export default function ResultsDashboardPage({ analysisResults, onViewDetail }: 
       <Tabs defaultValue="validation" className="w-full">
         <TabsList className="grid w-full grid-cols-3 mb-4">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -123,6 +146,7 @@ export default function ResultsDashboardPage({ analysisResults, onViewDetail }: 
           <TabsTrigger value="validation">Validation Results</TabsTrigger>
           <TabsTrigger value="report">Full Report</TabsTrigger>
         </TabsList>
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 
@@ -411,6 +435,69 @@ export default function ResultsDashboardPage({ analysisResults, onViewDetail }: 
                     : "Unknown Provider"
 
 >>>>>>> Stashed changes
+=======
+
+        {/* Tab 1: Cleaned Data */}
+        <TabsContent value="cleaned">
+          <Card className="stats-border">
+            <CardHeader>
+              <CardTitle>AI-Cleaned Provider Data</CardTitle>
+              <CardDescription>Data extracted and normalized from your CSV.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Specialty</TableHead>
+                    <TableHead>NPI</TableHead>
+                    <TableHead>Phone</TableHead>
+                    <TableHead>Confidence</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {cleanedProviders.map((p: any, i: number) => (
+                    <TableRow key={i}>
+                      <TableCell className="font-medium">{p.first_name || ""} {p.last_name || ""}</TableCell>
+                      <TableCell>{p.specialty || "N/A"}</TableCell>
+                      <TableCell>{p.npi_number || "MISSING"}</TableCell>
+                      <TableCell>{p.phone || "N/A"}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="bg-green-100 text-green-700 border-green-200">
+                          High
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {cleanedProviders.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                        No data available.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Tab 2: Validation Results */}
+        <TabsContent value="validation">
+          <Card className="stats-border">
+            <CardHeader>
+              <CardTitle>Validation & Risk Analysis</CardTitle>
+              <CardDescription>Discrepancies found against NPI Registry.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {validatedProviders.map((res: any, i: number) => {
+                  // Attempt to reconstruct provider name from inputs or updates
+                  const name = res.updated_fields?.first_name
+                    ? `${res.updated_fields.first_name} ${res.updated_fields.last_name}`
+                    : "Unknown Provider"
+
+>>>>>>> Stashed changes
                   const hasIssues = res.requires_manual_review
                   const issues = res.discrepancies || []
                   const score = res.confidence_scores?.overall || 0.0
@@ -505,6 +592,9 @@ export default function ResultsDashboardPage({ analysisResults, onViewDetail }: 
       </div>
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
