@@ -1,6 +1,6 @@
 """
 Valid8 Ingestion Microservice (Gemini SDK version)
-- Uses google.generativeai SDK with gemini-1.5-flash by default.
+- Uses google.generativeai SDK with gemini-2.5-flash by default.
 - Safer: retries, robust JSON extraction, runs blocking SDK calls off the event loop.
 """
 
@@ -39,7 +39,7 @@ STANDARD_FIELDS = [
 
 # Environment-configurable
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 MAX_ROWS_TO_SAMPLE = int(os.getenv("MAX_ROWS_TO_SAMPLE", "50"))
 LLM_TIMEOUT_SECONDS = float(os.getenv("LLM_TIMEOUT_SECONDS", "120.0"))
 RETRY_ATTEMPTS = int(os.getenv("LLM_RETRY_ATTEMPTS", "3"))
@@ -52,14 +52,14 @@ if GEMINI_API_KEY:
 # Pydantic models
 # -----------------------------------------------------------------------------
 class ProviderConfidence(BaseModel):
-    provider_id: float = Field(ge=0.0, le=1.0)
-    name: float = Field(ge=0.0, le=1.0)
-    specialty: float = Field(ge=0.0, le=1.0)
-    phone: float = Field(ge=0.0, le=1.0)
-    email: float = Field(ge=0.0, le=1.0)
-    address: float = Field(ge=0.0, le=1.0)
-    npi_number: float = Field(ge=0.0, le=1.0)
-    license_number: float = Field(ge=0.0, le=1.0)
+    provider_id: float = Field(default=0.0, ge=0.0, le=1.0)
+    name: float = Field(default=0.0, ge=0.0, le=1.0)
+    specialty: float = Field(default=0.0, ge=0.0, le=1.0)
+    phone: float = Field(default=0.0, ge=0.0, le=1.0)
+    email: float = Field(default=0.0, ge=0.0, le=1.0)
+    address: float = Field(default=0.0, ge=0.0, le=1.0)
+    npi_number: float = Field(default=0.0, ge=0.0, le=1.0)
+    license_number: float = Field(default=0.0, ge=0.0, le=1.0)
 
 #for the validation module because validation expects these fields
 class ProviderValidation(BaseModel):
