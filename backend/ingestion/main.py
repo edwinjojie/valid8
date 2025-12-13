@@ -102,53 +102,48 @@ def generate_temp_id() -> str:
 
 def prepare_prompt_from_csv(df: pd.DataFrame) -> str:
     csv_sample = df.head(MAX_ROWS_TO_SAMPLE).to_csv(index=False)
-    prompt = f"""You are a healthcare data cleaning AI. Your task is to clean, normalize, and structure messy provider data.
+    # Simplify the prompt structure to reduce hallucinations
+    prompt = f"""You are a strict data extraction system. Convert the following CSV data into a clean JSON object.
 
-INPUT DATA (CSV):
+INPUT DATA:
 {csv_sample}
 
 INSTRUCTIONS:
-1. Parse the CSV and extract provider information
-2. Map data to: provider_id, name, specialty, phone, email, address, npi_number, license_number
-3. Clean data:
-   - Names: Title Case
-   - Emails: lowercase
-   - Phones: digits only with optional + prefix
-   - Addresses: single normalized string
-   - Fix specialty typos
-4. Extract fields from free text (e.g., 'NPI 1234' or 'CA license 9999')
-5. For each field, provide a confidence score (0.0-1.0)
-6. Document all changes in ai_notes array
-7. Use null for missing values (not empty strings)
-8. ALWAYS return valid JSON only. NO explanations or markdown.
+1. Extract every row from the CSV into a provider record.
+2. Standardize fields:
+   - Names: Title Case (e.g., "John Smith")
+   - Email: Lowercase
+   - Phone: Standard format
+3. Extract hidden values like NPI or License from text fields.
+4. Calculate a confidence score (0.0-1.0) for each field.
+5. Identify any "ai_notes" for corrections made.
 
-OUTPUT FORMAT:
+REQUIRED OUTPUT JSON STRUCTURE:
 {{
   "providers": [
     {{
-      "provider_id": "string or null",
-      "name": "string or null",
-      "specialty": "string or null",
-      "phone": "string or null",
-      "email": "string or null",
-      "address": "string or null",
-      "npi_number": "string or null",
-      "license_number": "string or null",
+      "provider_id": "temp-1",
+      "name": "Extracted Name",
+      "specialty": "Specialty",
+      "phone": "555-123-4567",
+      "email": "email@example.com",
+      "address": "123 St, City",
+      "npi_number": "1234567890",
+      "license_number": "AB12345",
       "confidence": {{
-        "provider_id": 0.90,
-        "name": 0.95,
-        "specialty": 0.85,
-        "phone": 0.90,
-        "email": 0.92,
-        "address": 0.88,
-        "npi_number": 0.99,
-        "license_number": 0.87
+         "name": 1.0,
+         "npi_number": 0.95,
+         ...
       }},
-      "ai_notes": ["sample note"],
-      "source_row": 0
+      "ai_notes": ["Fixed typo in specialty"]
     }}
   ]
 }}
+
+IMPORTANT:
+- Return ONLY the valid JSON object.
+- The root key MUST be "providers".
+- Do not include markdown formatting like ```json.
 """
     return prompt
 
