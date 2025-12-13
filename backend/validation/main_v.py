@@ -1,6 +1,6 @@
 """
 Valid8 Validation Microservice (Gemini SDK version)
-- Uses google.generativeai SDK with gemini-1.5-flash by default.
+- Uses google.generativeai SDK with gemini-2.5-flash by default.
 - Performs provider validation against external NPI reference data.
 - Independent microservice (does NOT depend on ingestion service internals).
 """
@@ -29,7 +29,7 @@ load_dotenv()
 # CONFIG
 # -----------------------------------------------------------------------------
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_MODEL = os.getenv("GEMINI_VALIDATION_MODEL", "gemini-1.5-flash")
+GEMINI_MODEL = os.getenv("GEMINI_VALIDATION_MODEL", "gemini-2.5-flash")
 RETRY_ATTEMPTS = int(os.getenv("LLM_RETRY_ATTEMPTS", "3"))
 LLM_TIMEOUT_SECONDS = float(os.getenv("LLM_TIMEOUT_SECONDS", "120.0"))
 
@@ -83,6 +83,18 @@ Your tasks:
 - Assign confidence_scores for every field.
 - Add validation_notes explaining changes.
 - Decide requires_manual_review = true/false.
+
+CRITICAL RULES:
+1. If INPUT_PROVIDER_DATA has NO 'npi_number', you MUST:
+   - add "Missing NPI Number" to discrepancies
+   - set requires_manual_review = true
+   - set confidence_scores.npi_number = 0.0
+
+2. If EXTERNAL_REFERENCE_DATA is empty or contains "error", but an NPI was provided:
+   - add "Invalid NPI - No match found in registry" to discrepancies
+   - set requires_manual_review = true
+
+3. If data matches the external reference, confidence should be high (0.9-1.0).
 
 Output JSON only:
 {
