@@ -192,18 +192,5 @@ def get_job_status(job_id: str):
     )
 
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-# Keep the old sync endpoint for backward compat if needed, or remove it.
-# We will simplify and remove it to force usage of the new async flow.
-# But for safety, I'll alias it or just leave it out to keep code clean.
-
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

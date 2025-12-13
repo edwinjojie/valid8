@@ -42,16 +42,6 @@ export default function Valid8Care() {
         <div className="flex-1 overflow-auto bg-background">
           {currentPage === "dashboard" && <DashboardPage setCurrentPage={setCurrentPage} />}
           {currentPage === "upload" && <UploadPage onUploadStart={handleUploadStart} />}
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-          {currentPage === "progress" && <ValidationProgressPage processingFile={processingFile} onComplete={handleProcessingComplete} />}
-          {currentPage === "results" && <ResultsDashboardPage analysisResults={analysisResults} onViewDetail={() => setCurrentPage("detail")} />}
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
           {currentPage === "progress" && (
             <ValidationProgressPage
               processingFile={processingFile}
@@ -64,13 +54,6 @@ export default function Valid8Care() {
               onViewDetail={() => setCurrentPage("detail")}
             />
           )}
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
           {currentPage === "detail" && <ProviderDetailPage onBack={() => setCurrentPage("results")} />}
           {currentPage === "reports" && <ReportsPage />}
         </div>
