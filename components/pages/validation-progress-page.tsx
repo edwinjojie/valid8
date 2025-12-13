@@ -4,7 +4,10 @@ import { useState, useEffect, useRef } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
-import { CheckCircle2, Clock, Zap, TrendingUp, AlertCircle, Loader2 } from "lucide-react"
+import { CheckCircle2, Clock, Zap, AlertCircle, Loader2 } from "lucide-react"
+
+// Ensure we use the environment variable for the backend URL
+const API_URL = process.env.NEXT_PUBLIC_ORCHESTRATOR_URL
 
 interface ValidationProgressPageProps {
   processingFile: File | null
@@ -40,13 +43,18 @@ export default function ValidationProgressPage({ processingFile, onComplete }: V
     if (!processingFile || hasStarted.current) return
     hasStarted.current = true
 
+    if (!API_URL) {
+      setError("Configuration Error: NEXT_PUBLIC_ORCHESTRATOR_URL not set")
+      return;
+    }
+
     const startJob = async () => {
       addLog(`Initiating upload for file: ${processingFile.name}`)
       try {
         const formData = new FormData()
         formData.append("file", processingFile)
 
-        const response = await fetch("http://localhost:8000/start-job", {
+        const response = await fetch(`${API_URL}/start-job`, {
           method: "POST",
           body: formData,
         })
@@ -72,7 +80,7 @@ export default function ValidationProgressPage({ processingFile, onComplete }: V
     const pollStatus = async (jobId: string) => {
       const interval = setInterval(async () => {
         try {
-          const res = await fetch(`http://localhost:8000/status/${jobId}`)
+          const res = await fetch(`${API_URL}/status/${jobId}`)
           if (!res.ok) throw new Error("Status check failed")
 
           const statusData = await res.json()

@@ -1,26 +1,22 @@
 """
-Valid8 Validation Microservice (Gemini SDK version)
-- Uses google.generativeai SDK with gemini-2.5-flash by default.
-- Performs provider validation against external NPI reference data.
-- Independent microservice (does NOT depend on ingestion service internals).
+Valid8 Validation Microservice
+- Uses llm_client for generation
+- LLM agnostic (Gemini / Ollama via env vars)
 """
 
 import os
 import json
 import re
 import asyncio
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
-
-# Gemini SDK
-import google.generativeai as genai
-
-# External NPI lookup (separate file)
+# --- REFACTOR: Import generate from local llm_client ---
+from llm_client import generate
 from npi_lookup_api import fetch_npi
 
 load_dotenv()
@@ -28,14 +24,8 @@ load_dotenv()
 # -----------------------------------------------------------------------------
 # CONFIG
 # -----------------------------------------------------------------------------
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_MODEL = os.getenv("GEMINI_VALIDATION_MODEL", "gemini-2.5-flash")
 RETRY_ATTEMPTS = int(os.getenv("LLM_RETRY_ATTEMPTS", "3"))
 LLM_TIMEOUT_SECONDS = float(os.getenv("LLM_TIMEOUT_SECONDS", "120.0"))
-
-if GEMINI_API_KEY:
-    genai.configure(api_key=GEMINI_API_KEY)
-
 
 # -----------------------------------------------------------------------------
 # Pydantic Models
@@ -57,9 +47,9 @@ class ValidationResponse(BaseModel):
 # FastAPI App
 # -----------------------------------------------------------------------------
 app = FastAPI(
-    title="Valid8 Validation (Gemini SDK)",
-    description="Validates cleaned provider data using NPI reference + Gemini LLM.",
-    version="1.0.0"
+    title="Valid8 Validation",
+    description="Validates provider data using agnostic LLM interface.",
+    version="1.2.0"
 )
 
 app.add_middleware(
@@ -112,36 +102,30 @@ Return ONLY JSON.
 
 
 # -----------------------------------------------------------------------------
-# Helper: Extract valid JSON
+# Helpers
 # -----------------------------------------------------------------------------
 def robust_extract_json(content: str):
     content = content.replace("```json", "").replace("```", "")
-
     try:
         return json.loads(content)
     except:
         pass
-
     match = re.search(r"\{.*\}", content, re.DOTALL)
     if match:
         try:
             return json.loads(match.group(0))
         except:
             pass
+    raise HTTPException(500, "LLM returned invalid JSON.")
 
-    raise HTTPException(500, "Gemini returned invalid JSON.")
 
-
-# -----------------------------------------------------------------------------
-# Helper: Call Gemini with retries
-# -----------------------------------------------------------------------------
-async def call_gemini(prompt: str) -> Dict[str, Any]:
-
-    async def call_once():
+async def call_llm_with_retries(prompt: str) -> Dict[str, Any]:
+    """
+    Calls configured LLM via llm_client.
+    """
+    async def _call_once():
         def blocking():
-            model = genai.GenerativeModel(GEMINI_MODEL)
-            resp = model.generate_content(prompt)
-            return resp.text
+            return generate(prompt)
         return await asyncio.to_thread(blocking)
 
     backoff = 1
@@ -149,16 +133,15 @@ async def call_gemini(prompt: str) -> Dict[str, Any]:
 
     for attempt in range(RETRY_ATTEMPTS):
         try:
-            raw = await asyncio.wait_for(call_once(), timeout=LLM_TIMEOUT_SECONDS)
+            raw = await asyncio.wait_for(_call_once(), timeout=LLM_TIMEOUT_SECONDS)
             return robust_extract_json(raw)
-
         except Exception as e:
             last_error = e
             if attempt < RETRY_ATTEMPTS - 1:
                 await asyncio.sleep(backoff)
                 backoff *= 2
-
-    raise HTTPException(500, f"Gemini API failed after retries: {last_error}")
+    
+    raise HTTPException(500, f"LLM failed after retries: {last_error}")
 
 
 # -----------------------------------------------------------------------------
@@ -185,41 +168,31 @@ EXTERNAL_REFERENCE_DATA:
 """
 
     # Step 3 — LLM Validation
-    result = await call_gemini(prompt)
-
+    result = await call_llm_with_retries(prompt)
     return ValidationResult(**result)
 
 
 # -----------------------------------------------------------------------------
-# API Endpoint: Validate list of providers
+# API Endpoints
 # -----------------------------------------------------------------------------
 @app.post("/validate", response_model=ValidationResponse)
 async def validate_providers(providers: List[dict]):
-
     tasks = [validate_single_provider(p) for p in providers]
     results = await asyncio.gather(*tasks)
-
     return ValidationResponse(
         status="success",
         validated=results
     )
 
 
-# -----------------------------------------------------------------------------
-# Health Check
-# -----------------------------------------------------------------------------
 @app.get("/health")
 async def health():
     return {
         "status": "healthy",
-        "model": GEMINI_MODEL,
-        "key_configured": bool(GEMINI_API_KEY)
+        "llm_provider": os.getenv("LLM_PROVIDER", "gemini")
     }
 
 
-# -----------------------------------------------------------------------------
-# Run
-# -----------------------------------------------------------------------------
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main_v:app", host="0.0.0.0", port=8002, reload=True)

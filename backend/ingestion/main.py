@@ -1,7 +1,7 @@
 """
-Valid8 Ingestion Microservice (Gemini SDK version)
-- Uses google.generativeai SDK with gemini-2.5-flash by default.
-- Safer: retries, robust JSON extraction, runs blocking SDK calls off the event loop.
+Valid8 Ingestion Microservice
+- Uses llm_client for generation
+- LLM agnostic (Gemini / Ollama via env vars)
 """
 
 import os
@@ -18,8 +18,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 
-# Gemini SDK
-import google.generativeai as genai
+# --- REFACTOR: Import generate from local llm_client ---
+from llm_client import generate
 
 load_dotenv()
 
@@ -27,26 +27,12 @@ load_dotenv()
 # CONFIG
 # -----------------------------------------------------------------------------
 STANDARD_FIELDS = [
-    "provider_id",
-    "name",
-    "specialty",
-    "phone",
-    "email",
-    "address",
-    "npi_number",
-    "license_number",
+    "provider_id", "name", "specialty", "phone", "email", "address", "npi_number", "license_number",
 ]
 
-# Environment-configurable
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 MAX_ROWS_TO_SAMPLE = int(os.getenv("MAX_ROWS_TO_SAMPLE", "50"))
 LLM_TIMEOUT_SECONDS = float(os.getenv("LLM_TIMEOUT_SECONDS", "120.0"))
 RETRY_ATTEMPTS = int(os.getenv("LLM_RETRY_ATTEMPTS", "3"))
-
-# Configure SDK if key present
-if GEMINI_API_KEY:
-    genai.configure(api_key=GEMINI_API_KEY)
 
 # -----------------------------------------------------------------------------
 # Pydantic models
@@ -61,14 +47,12 @@ class ProviderConfidence(BaseModel):
     npi_number: float = Field(default=0.0, ge=0.0, le=1.0)
     license_number: float = Field(default=0.0, ge=0.0, le=1.0)
 
-#for the validation module because validation expects these fields
 class ProviderValidation(BaseModel):
     updated_fields: dict
     discrepancies: list
     confidence_scores: dict
     validation_notes: list
     requires_manual_review: bool
-
 
 class CleanedProvider(BaseModel):
     provider_id: Optional[str] = None
@@ -84,8 +68,6 @@ class CleanedProvider(BaseModel):
     source_row: int
     validation: Optional[ProviderValidation] = None
 
-
-
 class IngestionResponse(BaseModel):
     status: str
     total_providers: int
@@ -97,9 +79,9 @@ class IngestionResponse(BaseModel):
 # FastAPI app
 # -----------------------------------------------------------------------------
 app = FastAPI(
-    title="Valid8 Ingestion (Gemini SDK)",
-    description="AI-powered healthcare provider data cleaning and normalization using Gemini SDK",
-    version="1.0.0",
+    title="Valid8 Ingestion",
+    description="AI-powered healthcare provider data cleaning using agnostic LLM",
+    version="1.2.0",
 )
 
 app.add_middleware(
@@ -172,47 +154,18 @@ OUTPUT FORMAT:
 
 
 def robust_extract_json(content: str) -> Dict[str, Any]:
-    """
-    Robustly extract the first JSON object from content, clean common issues,
-    and return parsed JSON or raise HTTPException.
-    """
-    # Direct attempt
     try:
         return json.loads(content)
     except Exception:
         pass
 
-    # Remove common fences and lead text
     content_clean = content.replace("```json", "").replace("```", "")
-    # Attempt to find first balanced JSON object using a stack approach
-    start = None
-    brace_count = 0
-    for i, ch in enumerate(content_clean):
-        if ch == "{":
-            if start is None:
-                start = i
-            brace_count += 1
-        elif ch == "}":
-            brace_count -= 1
-            if brace_count == 0 and start is not None:
-                candidate = content_clean[start : i + 1]
-                # quick cleanup
-                candidate = candidate.strip()
-                candidate = re.sub(r",\s*}", "}", candidate)
-                candidate = re.sub(r",\s*\]", "]", candidate)
-                # try to parse
-                try:
-                    return json.loads(candidate)
-                except Exception:
-                    # continue looking further if parsing fails
-                    start = None
-                    brace_count = 0
-                    continue
-
-    # fallback: try to find with regex (less reliable)
+    
+    # Simple regex fallback
     regex_match = re.search(r'\{(?:[^{}]|\n|\r)*\}', content_clean)
     if regex_match:
         candidate = regex_match.group(0)
+        # basic cleanup for common trailing comma issues
         candidate = re.sub(r",\s*}", "}", candidate)
         candidate = re.sub(r",\s*\]", "]", candidate)
         try:
@@ -220,69 +173,42 @@ def robust_extract_json(content: str) -> Dict[str, Any]:
         except Exception:
             pass
 
-    # give helpful debug in error
-    raise HTTPException(status_code=500, detail="Gemini did not return valid JSON. Raw (truncated): " + content[:400])
+    # If simple regex fails, try the iterative approach or just error out
+    raise HTTPException(status_code=500, detail="LLM did not return valid JSON. Response truncated: " + content[:200])
 
 
-async def call_gemini_with_retries(prompt: str, model_name: str = GEMINI_MODEL) -> Dict[str, Any]:
+async def call_llm_with_retries(prompt: str) -> Dict[str, Any]:
     """
-    Calls the Gemini SDK model in a thread (so it doesn't block the event loop),
-    with simple retries for transient failures (e.g., 429/503).
+    Calls the configured LLM provider using the llm_client.
+    Manages retries and event loop blocking.
     """
-    if not GEMINI_API_KEY:
-        raise HTTPException(status_code=500, detail="GEMINI_API_KEY not configured.")
-
+    
     async def _call_once():
-        # Use to_thread to run blocking SDK call off the event loop
         def blocking_call():
-            model = genai.GenerativeModel(model_name)
-            # generate_content returns an object with .text typically
-            # The SDK interface may vary by version; using generate_content like your working snippet
-            response = model.generate_content(prompt)
-            # prefer .text, but fallback if structure differs
-            if hasattr(response, "text") and response.text:
-                return response.text
-            # Some SDK versions have .candidates or choices - handle gracefully
-            try:
-                data = response.to_dict() if hasattr(response, "to_dict") else response
-                # try to dig out text
-                # This is defensive: adapt to your SDK version if needed
-                if isinstance(data, dict):
-                    # try multiple known paths
-                    if "candidates" in data and data["candidates"]:
-                        parts = data["candidates"][0].get("content", {}).get("parts", [])
-                        if parts:
-                            return parts[0].get("text", "")
-                    if "output" in data:
-                        return data.get("output", "")
-                return str(data)
-            except Exception:
-                return str(response)
-
-        # run blocking call
+            return generate(prompt)
+        
+        # Run blocking wrapper in thread
         return await asyncio.to_thread(blocking_call)
 
     backoff = 1.0
     for attempt in range(RETRY_ATTEMPTS):
         try:
             raw_text = await asyncio.wait_for(_call_once(), timeout=LLM_TIMEOUT_SECONDS)
+            if not raw_text:
+                raise ValueError("Empty response from LLM")
+                
             parsed = robust_extract_json(raw_text)
             return parsed
         except HTTPException:
-            # extractor-specific failure (invalid JSON) - do not retry many times
             raise
         except Exception as e:
-            # transient-ish errors: sleep and retry on certain exceptions
-            last_exc = e
             if attempt < RETRY_ATTEMPTS - 1:
                 await asyncio.sleep(backoff)
                 backoff *= 2
                 continue
-            # final failure
-            raise HTTPException(status_code=500, detail=f"Gemini API error: {str(e)}")
+            raise HTTPException(status_code=500, detail=f"LLM Provider error: {str(e)}")
 
-    # unreachable
-    raise HTTPException(status_code=500, detail="Gemini API unknown error")
+    raise HTTPException(status_code=500, detail="LLM error unknown")
 
 
 def post_process_providers(providers: List[Dict[str, Any]]) -> List[CleanedProvider]:
@@ -307,7 +233,6 @@ def post_process_providers(providers: List[Dict[str, Any]]) -> List[CleanedProvi
         try:
             processed.append(CleanedProvider(**provider_data))
         except Exception as e:
-            # Print for debugging but continue
             print(f"Warning: provider validation failed: {e}")
             continue
     return processed
@@ -321,20 +246,16 @@ async def health_check():
     return {
         "status": "healthy",
         "service": "valid8-ingestion",
-        "version": "1.0.0",
-        "llm_provider": "gemini",
-        "llm_model": GEMINI_MODEL,
-        "llm_configured": bool(GEMINI_API_KEY),
+        "version": "1.2.0",
+        "llm_provider": os.getenv("LLM_PROVIDER", "gemini")
     }
 
 
 @app.post("/ingest/csv", response_model=IngestionResponse)
 async def ingest_csv(file: UploadFile = File(...)):
-    # Validate extension
     if not file.filename.lower().endswith(".csv"):
         raise HTTPException(status_code=400, detail="Only CSV files are supported.")
 
-    # Read CSV
     try:
         content = await file.read()
         csv_string = content.decode("utf-8")
@@ -343,18 +264,17 @@ async def ingest_csv(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail="CSV encoding error; ensure UTF-8.")
     except pd.errors.EmptyDataError:
         raise HTTPException(status_code=400, detail="CSV file is empty.")
-    except pd.errors.ParserError as e:
+    except Exception as e:
         raise HTTPException(status_code=400, detail=f"CSV parsing error: {e}")
 
     if df.empty:
         raise HTTPException(status_code=400, detail="CSV file contains no rows.")
 
-    # Build prompt & call LLM
     prompt = prepare_prompt_from_csv(df)
-    llm_response = await call_gemini_with_retries(prompt, GEMINI_MODEL)
+    llm_response = await call_llm_with_retries(prompt)
 
     if "providers" not in llm_response or not isinstance(llm_response["providers"], list):
-        raise HTTPException(status_code=500, detail="Gemini output missing 'providers' list.")
+        raise HTTPException(status_code=500, detail="LLM output missing 'providers' list.")
 
     providers = post_process_providers(llm_response["providers"])
 
@@ -365,15 +285,11 @@ async def ingest_csv(file: UploadFile = File(...)):
         processing_notes=[
             f"Processed {len(df)} rows from CSV",
             f"Extracted {len(providers)} provider records",
-            f"Used LLM model: {GEMINI_MODEL}",
+            f"Using LLM Provider: {os.getenv('LLM_PROVIDER', 'gemini')}"
         ],
     )
 
 
-# -----------------------------------------------------------------------------
-# Run
-# -----------------------------------------------------------------------------
 if __name__ == "__main__":
     import uvicorn
-
     uvicorn.run("main:app", host="0.0.0.0", port=8001, reload=True)

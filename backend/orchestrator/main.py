@@ -3,18 +3,21 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import requests
 import uvicorn
-import os
 import secrets
 import typing
+from dotenv import load_dotenv
 
-# -----------------------------------------------------------------------------
-# Config / Constants
-# -----------------------------------------------------------------------------
-INGESTION_URL = os.getenv("INGESTION_URL", "http://localhost:8001/ingest/csv")
-VALIDATION_URL = os.getenv("VALIDATION_URL", "http://localhost:8002/validate")
+# Load env vars
+load_dotenv()
+
+# --- REFACTOR: Import Config from local ---
+from config import INGESTION_BASE_URL, VALIDATION_BASE_URL, get_service_url
+
+# Construct URLs
+INGESTION_URL = get_service_url(INGESTION_BASE_URL, "ingest/csv")
+VALIDATION_URL = get_service_url(VALIDATION_BASE_URL, "validate")
 
 # Simple in-memory job store
-# Structure: { job_id: { "status": str, "stage": str, "progress": int, "result": dict | None, "error": str | None } }
 JOBS = {}
 
 # -----------------------------------------------------------------------------
@@ -23,7 +26,7 @@ JOBS = {}
 app = FastAPI(
     title="Valid8 Orchestrator",
     description="Orchestrates the flow: CSV Upload -> Ingestion (Cleaning) -> Validation (NPI Check) -> Response",
-    version="1.0.0"
+    version="1.2.0"
 )
 
 app.add_middleware(
