@@ -102,48 +102,43 @@ def generate_temp_id() -> str:
 
 def prepare_prompt_from_csv(df: pd.DataFrame) -> str:
     csv_sample = df.head(MAX_ROWS_TO_SAMPLE).to_csv(index=False)
-    # Simplify the prompt structure to reduce hallucinations
-    prompt = f"""You are a strict data extraction system. Convert the following CSV data into a clean JSON object.
+    prompt = f"""You are a data parsing engine. Your job is to convert CSV rows into a JSON list of objects.
 
-INPUT DATA:
+CSV INPUT:
 {csv_sample}
 
-INSTRUCTIONS:
-1. Extract every row from the CSV into a provider record.
-2. Standardize fields:
-   - Names: Title Case (e.g., "John Smith")
-   - Email: Lowercase
-   - Phone: Standard format
-3. Extract hidden values like NPI or License from text fields.
-4. Calculate a confidence score (0.0-1.0) for each field.
-5. Identify any "ai_notes" for corrections made.
+CRITICAL RULES:
+1. You MUST process EVERY row in the CSV. Do not summarize or skip rows.
+2. The output MUST be valid JSON.
+3. The root object MUST contain a key "providers" which is a LIST of provider objects.
+4. For each row, extract the data. If a field is missing, use null.
+5. "confidence" is a dictionary of scores (0.0 to 1.0) for each extracted field.
 
-REQUIRED OUTPUT JSON STRUCTURE:
+EXPECTED JSON STRUCTURE (Example for 1 row):
 {{
   "providers": [
     {{
-      "provider_id": "temp-1",
-      "name": "Extracted Name",
-      "specialty": "Specialty",
-      "phone": "555-123-4567",
-      "email": "email@example.com",
-      "address": "123 St, City",
+      "provider_id": "temp-01",
+      "name": "Dr. John Doe",
+      "specialty": "Cardiology",
+      "phone": "555-0199",
+      "email": "john@example.com",
+      "address": "123 Main St",
       "npi_number": "1234567890",
-      "license_number": "AB12345",
+      "license_number": "CA-12345",
       "confidence": {{
-         "name": 1.0,
-         "npi_number": 0.95,
-         ...
+        "name": 1.0,
+        "specialty": 1.0,
+        "phone": 1.0,
+        "email": 1.0,
+        "address": 1.0,
+        "npi_number": 0.5,
+        "license_number": 0.5
       }},
-      "ai_notes": ["Fixed typo in specialty"]
+      "ai_notes": ["Extracted NPI from text"]
     }}
   ]
 }}
-
-IMPORTANT:
-- Return ONLY the valid JSON object.
-- The root key MUST be "providers".
-- Do not include markdown formatting like ```json.
 """
     return prompt
 
