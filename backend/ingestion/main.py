@@ -273,8 +273,20 @@ async def ingest_csv(file: UploadFile = File(...)):
     prompt = prepare_prompt_from_csv(df)
     llm_response = await call_llm_with_retries(prompt)
 
+    # Handle case where LLM returns just a list
+    if isinstance(llm_response, list):
+        llm_response = {"providers": llm_response}
+
+    # Handle case where LLM used a different key (e.g., "data", "results")
+    if "providers" not in llm_response:
+        # Search for any list value in the dictionary
+        for key, value in llm_response.items():
+            if isinstance(value, list):
+                llm_response["providers"] = value
+                break
+
     if "providers" not in llm_response or not isinstance(llm_response["providers"], list):
-        raise HTTPException(status_code=500, detail="LLM output missing 'providers' list.")
+        raise HTTPException(status_code=500, detail=f"LLM output missing 'providers' list. Got: {str(llm_response)[:200]}")
 
     providers = post_process_providers(llm_response["providers"])
 
