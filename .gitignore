@@ -7,11 +7,12 @@ node_modules/
 coverage/
 
 # Next.js
-/.next/
+/frontend/.next/
 /out/
 /build
 .DS_Store
 *.pem
+frontend/.next
 
 # Debug
 npm-debug.log*

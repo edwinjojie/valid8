@@ -68,6 +68,9 @@ class CleanedProvider(BaseModel):
     source_row: int
     validation: Optional[ProviderValidation] = None
 
+class ProviderList(BaseModel):
+    providers: List[CleanedProvider]
+
 class IngestionResponse(BaseModel):
     status: str
     total_providers: int
@@ -167,7 +170,7 @@ def robust_extract_json(content: str) -> Dict[str, Any]:
     raise HTTPException(status_code=500, detail="LLM did not return valid JSON. Response truncated: " + content[:200])
 
 
-async def call_llm_with_retries(prompt: str) -> Dict[str, Any]:
+async def call_llm_with_retries(prompt: str, response_model: Any = None) -> Dict[str, Any]:
     """
     Calls the configured LLM provider using the llm_client.
     Manages retries and event loop blocking.
@@ -175,7 +178,7 @@ async def call_llm_with_retries(prompt: str) -> Dict[str, Any]:
     
     async def _call_once():
         def blocking_call():
-            return generate(prompt)
+            return generate(prompt, response_model=response_model)
         
         # Run blocking wrapper in thread
         return await asyncio.to_thread(blocking_call)
@@ -261,7 +264,7 @@ async def ingest_csv(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail="CSV file contains no rows.")
 
     prompt = prepare_prompt_from_csv(df)
-    llm_response = await call_llm_with_retries(prompt)
+    llm_response = await call_llm_with_retries(prompt, response_model=ProviderList)
 
     # Handle case where LLM returns just a list
     if isinstance(llm_response, list):

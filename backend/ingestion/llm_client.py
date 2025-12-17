@@ -2,7 +2,10 @@ import os
 import requests
 import google.generativeai as genai
 
-def generate(prompt: str) -> str:
+from typing import Any, Optional
+import json
+
+def generate(prompt: str, response_model: Any = None) -> str:
     provider = os.getenv("LLM_PROVIDER", "gemini").lower()
 
     if provider == "gemini":
@@ -15,8 +18,15 @@ def generate(prompt: str) -> str:
         model_name = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
         model = genai.GenerativeModel(model_name)
         
+        generation_config = {}
+        if response_model:
+            generation_config["response_mime_type"] = "application/json"
+            # Attempt to get schema from Pydantic model
+            if hasattr(response_model, "model_json_schema"):
+                 generation_config["response_schema"] = response_model
+            
         try:
-            response = model.generate_content(prompt)
+            response = model.generate_content(prompt, generation_config=generation_config)
             return response.text
         except Exception as e:
             raise RuntimeError(f"Gemini generation failed: {str(e)}")
