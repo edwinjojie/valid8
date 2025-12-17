@@ -24,15 +24,32 @@ def generate(prompt: str, response_model: Any = None) -> str:
             if hasattr(response_model, "model_json_schema"):
                 schema = response_model.model_json_schema()
                 
-                # Recursively remove 'default' and 'title' from schema
-                def clean_schema(s):
+                schema = response_model.model_json_schema()
+                
+                # Helper: Resolve $defs/$ref to handle nested Pydantic models
+                defs = schema.get("$defs", {}) or schema.get("definitions", {})
+                
+                def resolve_and_clean(s):
+                    # Handle resolution
                     if isinstance(s, dict):
-                        return {k: clean_schema(v) for k, v in s.items() if k not in ["default", "title"]}
+                        if "$ref" in s:
+                            ref_key = s["$ref"].split("/")[-1]
+                            if ref_key in defs:
+                                return resolve_and_clean(defs[ref_key])
+                        
+                        # Handle cleaning (remove invalid keys for Gemini)
+                        return {
+                            k: resolve_and_clean(v) 
+                            for k, v in s.items() 
+                            if k not in ["default", "title", "$defs", "definitions"]
+                        }
+                        
                     if isinstance(s, list):
-                        return [clean_schema(i) for i in s]
+                        return [resolve_and_clean(i) for i in s]
+                    
                     return s
                 
-                generation_config["response_schema"] = clean_schema(schema)
+                generation_config["response_schema"] = resolve_and_clean(schema)
             
         try:
             response = model.generate_content(prompt, generation_config=generation_config)
