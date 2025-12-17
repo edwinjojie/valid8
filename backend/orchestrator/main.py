@@ -8,7 +8,7 @@ import typing
 from dotenv import load_dotenv
 
 # Load env vars
-load_dotenv()
+load_dotenv(encoding="utf-8-sig")
 
 # --- REFACTOR: Import Config from local ---
 from config import INGESTION_BASE_URL, VALIDATION_BASE_URL, get_service_url
