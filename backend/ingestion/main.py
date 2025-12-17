@@ -105,16 +105,53 @@ def generate_temp_id() -> str:
 
 def prepare_prompt_from_csv(df: pd.DataFrame) -> str:
     csv_sample = df.head(MAX_ROWS_TO_SAMPLE).to_csv(index=False)
-    prompt = f"""Extract healthcare provider data from the CSV below.
+    prompt = f"""You are a healthcare data cleaning AI. Your task is to clean, normalize, and structure messy provider data.
 
-CSV INPUT:
+INPUT DATA (CSV):
 {csv_sample}
 
 INSTRUCTIONS:
-1. Process EVERY row.
-2. Map CSV columns to the target fields (name, specialty, phone, email, address, npi_number, license_number).
-3. "confidence" should be a score (0.0 to 1.0) indicating how confident you are that the extracted value is correct and present. 1.0 = perfect match/present, 0.0 = missing.
-4. "ai_notes" should list any specific issues or transformations (e.g., "Formatted phone number", "Inferred specialty").
+1. Parse the CSV and extract provider information
+2. Map data to: provider_id, name, specialty, phone, email, address, npi_number, license_number
+3. Clean data:
+   - Names: Title Case
+   - Emails: lowercase
+   - Phones: digits only with optional + prefix
+   - Addresses: single normalized string
+   - Fix specialty typos
+4. Extract fields from free text (e.g., 'NPI 1234' or 'CA license 9999')
+5. For each field, provide a confidence score (0.0-1.0)
+6. Document all changes in ai_notes array
+7. Use null for missing values (not empty strings)
+8. ALWAYS return valid JSON only. NO explanations or markdown.
+
+OUTPUT FORMAT:
+{{
+  "providers": [
+    {{
+      "provider_id": "string or null",
+      "name": "string or null",
+      "specialty": "string or null",
+      "phone": "string or null",
+      "email": "string or null",
+      "address": "string or null",
+      "npi_number": "string or null",
+      "license_number": "string or null",
+      "confidence": {{
+        "provider_id": 0.90,
+        "name": 0.95,
+        "specialty": 0.85,
+        "phone": 0.90,
+        "email": 0.92,
+        "address": 0.88,
+        "npi_number": 0.99,
+        "license_number": 0.87
+      }},
+      "ai_notes": ["sample note"],
+      "source_row": 0
+    }}
+  ]
+}}
 """
     return prompt
 
@@ -237,7 +274,7 @@ async def ingest_csv(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail="CSV file contains no rows.")
 
     prompt = prepare_prompt_from_csv(df)
-    llm_response = await call_llm_with_retries(prompt, response_model=ProviderList)
+    llm_response = await call_llm_with_retries(prompt)
 
     # Handle case where LLM returns just a list
     if isinstance(llm_response, list):
