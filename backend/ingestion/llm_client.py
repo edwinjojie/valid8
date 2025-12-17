@@ -21,9 +21,18 @@ def generate(prompt: str, response_model: Any = None) -> str:
         generation_config = {}
         if response_model:
             generation_config["response_mime_type"] = "application/json"
-            # Attempt to get schema from Pydantic model
             if hasattr(response_model, "model_json_schema"):
-                 generation_config["response_schema"] = response_model
+                schema = response_model.model_json_schema()
+                
+                # Recursively remove 'default' and 'title' from schema
+                def clean_schema(s):
+                    if isinstance(s, dict):
+                        return {k: clean_schema(v) for k, v in s.items() if k not in ["default", "title"]}
+                    if isinstance(s, list):
+                        return [clean_schema(i) for i in s]
+                    return s
+                
+                generation_config["response_schema"] = clean_schema(schema)
             
         try:
             response = model.generate_content(prompt, generation_config=generation_config)

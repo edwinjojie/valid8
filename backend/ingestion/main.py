@@ -105,43 +105,16 @@ def generate_temp_id() -> str:
 
 def prepare_prompt_from_csv(df: pd.DataFrame) -> str:
     csv_sample = df.head(MAX_ROWS_TO_SAMPLE).to_csv(index=False)
-    prompt = f"""You are a data parsing engine. Your job is to convert CSV rows into a JSON list of objects.
+    prompt = f"""Extract healthcare provider data from the CSV below.
 
 CSV INPUT:
 {csv_sample}
 
-CRITICAL RULES:
-1. You MUST process EVERY row in the CSV. Do not summarize or skip rows.
-2. The output MUST be valid JSON.
-3. The root object MUST contain a key "providers" which is a LIST of provider objects.
-4. For each row, extract the data. If a field is missing, use null.
-5. "confidence" is a dictionary of scores (0.0 to 1.0) for each extracted field.
-
-EXPECTED JSON STRUCTURE (Example for 1 row):
-{{
-  "providers": [
-    {{
-      "provider_id": "temp-01",
-      "name": "Dr. John Doe",
-      "specialty": "Cardiology",
-      "phone": "555-0199",
-      "email": "john@example.com",
-      "address": "123 Main St",
-      "npi_number": "1234567890",
-      "license_number": "CA-12345",
-      "confidence": {{
-        "name": 1.0,
-        "specialty": 1.0,
-        "phone": 1.0,
-        "email": 1.0,
-        "address": 1.0,
-        "npi_number": 0.5,
-        "license_number": 0.5
-      }},
-      "ai_notes": ["Extracted NPI from text"]
-    }}
-  ]
-}}
+INSTRUCTIONS:
+1. Process EVERY row.
+2. Map CSV columns to the target fields (name, specialty, phone, email, address, npi_number, license_number).
+3. "confidence" should be a score (0.0 to 1.0) indicating how confident you are that the extracted value is correct and present. 1.0 = perfect match/present, 0.0 = missing.
+4. "ai_notes" should list any specific issues or transformations (e.g., "Formatted phone number", "Inferred specialty").
 """
     return prompt
 
