@@ -107,53 +107,51 @@ def generate_temp_id() -> str:
 
 def prepare_prompt_from_csv(df: pd.DataFrame) -> str:
     csv_sample = df.head(MAX_ROWS_TO_SAMPLE).to_csv(index=False)
-    prompt = f"""You are a healthcare data cleaning AI. Your task is to clean, normalize, and structure messy provider data.
+    prompt = f"""You are a specialized data extraction AI.
+TASK: Extract provider information from the CSV below and return a JSON object.
 
-INPUT DATA (CSV):
+INPUT CSV:
 {csv_sample}
 
-INSTRUCTIONS:
-1. Parse the CSV and extract provider information
-2. Map data to: provider_id, name, specialty, phone, email, address, npi_number, license_number
-3. Clean data:
-   - Names: Title Case
-   - Emails: lowercase
-   - Phones: digits only with optional + prefix
-   - Addresses: single normalized string
-   - Fix specialty typos
-4. Extract fields from free text (e.g., 'NPI 1234' or 'CA license 9999')
-5. For each field, provide a confidence score (0.0-1.0)
-6. Document all changes in ai_notes array
-7. Use null for missing values (not empty strings)
-8. ALWAYS return valid JSON only. NO explanations or markdown.
+STRICT OUTPUT FORMAT REQUIRED:
+You must return a valid JSON object with a single key "providers" containing a list of objects.
+Do not include any explanation, markdown formatting, or text outside the JSON.
 
-OUTPUT FORMAT:
+Expected JSON Structure:
 {{
   "providers": [
     {{
-      "provider_id": "string or null",
-      "name": "string or null",
-      "specialty": "string or null",
-      "phone": "string or null",
-      "email": "string or null",
-      "address": "string or null",
-      "npi_number": "string or null",
-      "license_number": "string or null",
+      "provider_id": "generated_id",
+      "name": "Dr. John Doe",
+      "specialty": "Cardiology",
+      "phone": "+15550000000",
+      "email": "john@example.com",
+      "address": "123 Main St, City, ST",
+      "npi_number": "1234567890",
+      "license_number": "CA12345",
       "confidence": {{
-        "provider_id": 0.90,
-        "name": 0.95,
-        "specialty": 0.85,
-        "phone": 0.90,
-        "email": 0.92,
-        "address": 0.88,
-        "npi_number": 0.99,
-        "license_number": 0.87
+        "provider_id": 1.0,
+        "name": 1.0,
+        "specialty": 1.0,
+        "phone": 1.0,
+        "email": 1.0,
+        "address": 1.0,
+        "npi_number": 1.0,
+        "license_number": 1.0
       }},
-      "ai_notes": ["sample note"],
-      "source_row": 0
+      "ai_notes": ["Extracted from column A"],
+      "source_row": 1
     }}
   ]
 }}
+
+PROCESSING RULES:
+1. Extract ALL rows from the CSV.
+2. Normalize names to Title Case.
+3. Clean phone numbers (remove dashes/parens).
+4. Assign a confidence score (0.0 to 1.0) for each field based on extraction quality.
+5. If a field is missing, use null.
+6. Return ONLY the JSON object.
 """
     return prompt
 

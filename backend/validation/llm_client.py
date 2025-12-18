@@ -30,7 +30,8 @@ def generate(prompt: str) -> str:
         payload = {
             "model": model_name,
             "prompt": prompt,
-            "stream": False
+            "stream": False,
+            "format": "json"
         }
         
         try:
