@@ -5,6 +5,11 @@ Valid8 Ingestion Microservice
 """
 
 import os
+from dotenv import load_dotenv
+
+# Force load .env from the same directory as this file
+load_dotenv(os.path.join(os.path.dirname(__file__), ".env"), override=True)
+
 import json
 import re
 import secrets
@@ -16,12 +21,9 @@ import pandas as pd
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from dotenv import load_dotenv
 
 # --- REFACTOR: Import generate from local llm_client ---
 from llm_client import generate
-
-load_dotenv()
 
 # -----------------------------------------------------------------------------
 # CONFIG

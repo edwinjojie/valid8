@@ -10,16 +10,19 @@ import re
 import asyncio
 from typing import List, Dict, Any
 
+from dotenv import load_dotenv
+
+# Force load .env from the same directory as this file
+load_dotenv(os.path.join(os.path.dirname(__file__), ".env"), override=True)
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from dotenv import load_dotenv
 
 # --- REFACTOR: Import generate from local llm_client ---
 from llm_client import generate
 from npi_lookup_api import fetch_npi
 
-load_dotenv()
 
 # -----------------------------------------------------------------------------
 # CONFIG
