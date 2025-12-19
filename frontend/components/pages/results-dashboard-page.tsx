@@ -144,8 +144,10 @@ export default function ResultsDashboardPage({ analysisResults, onViewDetail }: 
                         <div className="text-sm text-muted-foreground">
                           {issues.length > 0 ? (
                             <ul className="list-disc list-inside text-red-500">
-                              {issues.map((issue: string, k: number) => (
-                                <li key={k}>{issue}</li>
+                              {issues.map((issue: any, k: number) => (
+                                <li key={k}>
+                                  {typeof issue === 'object' ? JSON.stringify(issue) : String(issue)}
+                                </li>
                               ))}
                             </ul>
                           ) : (

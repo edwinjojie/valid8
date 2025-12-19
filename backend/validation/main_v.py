@@ -5,6 +5,11 @@ Valid8 Validation Microservice
 """
 
 import os
+from dotenv import load_dotenv
+
+# Force load .env from the same directory as this file
+load_dotenv(os.path.join(os.path.dirname(__file__), ".env"), override=True)
+
 import json
 import re
 import asyncio
@@ -23,7 +28,10 @@ from pydantic import BaseModel
 from llm_client import generate
 from npi_lookup_api import fetch_npi
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 # -----------------------------------------------------------------------------
 # CONFIG
 # -----------------------------------------------------------------------------

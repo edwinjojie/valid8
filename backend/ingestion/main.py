@@ -220,8 +220,14 @@ def post_process_providers(providers: List[Dict[str, Any]]) -> List[CleanedProvi
         if not provider_data.get("provider_id"):
             provider_data["provider_id"] = generate_temp_id()
 
+        # Handle confidence scores - ensure all fields have numeric values
         if "confidence" not in provider_data:
             provider_data["confidence"] = {field: 0.5 for field in STANDARD_FIELDS}
+        else:
+            # Replace None values with 0.5
+            for field in STANDARD_FIELDS:
+                if field not in provider_data["confidence"] or provider_data["confidence"][field] is None:
+                    provider_data["confidence"][field] = 0.5
 
         for field in STANDARD_FIELDS:
             if field not in provider_data or provider_data[field] == "":
@@ -237,6 +243,7 @@ def post_process_providers(providers: List[Dict[str, Any]]) -> List[CleanedProvi
             processed.append(CleanedProvider(**provider_data))
         except Exception as e:
             print(f"Warning: provider validation failed: {e}")
+            print(f"Provider data: {str(provider_data)[:200]}")
             continue
     return processed
 
@@ -274,7 +281,16 @@ async def ingest_csv(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail="CSV file contains no rows.")
 
     prompt = prepare_prompt_from_csv(df)
-    llm_response = await call_llm_with_retries(prompt)
+    
+    # Try LLM call with detailed error logging
+    try:
+        print(f"[INGESTION] Calling LLM with {len(df)} rows...")
+        llm_response = await call_llm_with_retries(prompt)
+        print(f"[INGESTION] LLM response received: {str(llm_response)[:200]}")
+    except Exception as e:
+        error_msg = f"LLM call failed: {str(e)}"
+        print(f"[INGESTION ERROR] {error_msg}")
+        raise HTTPException(status_code=500, detail=error_msg)
 
     # Handle case where LLM returns just a list
     if isinstance(llm_response, list):
@@ -289,9 +305,18 @@ async def ingest_csv(file: UploadFile = File(...)):
                 break
 
     if "providers" not in llm_response or not isinstance(llm_response["providers"], list):
-        raise HTTPException(status_code=500, detail=f"LLM output missing 'providers' list. Got: {str(llm_response)[:200]}")
+        error_detail = f"LLM output missing 'providers' list. Got: {str(llm_response)[:500]}"
+        print(f"[INGESTION ERROR] {error_detail}")
+        raise HTTPException(status_code=500, detail=error_detail)
 
-    providers = post_process_providers(llm_response["providers"])
+    # Process providers with error handling
+    try:
+        providers = post_process_providers(llm_response["providers"])
+        print(f"[INGESTION] Successfully processed {len(providers)} providers")
+    except Exception as e:
+        error_msg = f"Post-processing failed: {str(e)}"
+        print(f"[INGESTION ERROR] {error_msg}")
+        raise HTTPException(status_code=500, detail=error_msg)
 
     return IngestionResponse(
         status="success",
