@@ -5,6 +5,11 @@ Valid8 Ingestion Microservice
 """
 
 import os
+from dotenv import load_dotenv
+
+# Force load .env from the same directory as this file
+load_dotenv(os.path.join(os.path.dirname(__file__), ".env"), override=True)
+
 import json
 import re
 import secrets
@@ -16,12 +21,9 @@ import pandas as pd
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from dotenv import load_dotenv
 
 # --- REFACTOR: Import generate from local llm_client ---
 from llm_client import generate
-
-load_dotenv()
 
 # -----------------------------------------------------------------------------
 # CONFIG
@@ -105,53 +107,51 @@ def generate_temp_id() -> str:
 
 def prepare_prompt_from_csv(df: pd.DataFrame) -> str:
     csv_sample = df.head(MAX_ROWS_TO_SAMPLE).to_csv(index=False)
-    prompt = f"""You are a healthcare data cleaning AI. Your task is to clean, normalize, and structure messy provider data.
+    prompt = f"""You are a specialized data extraction AI.
+TASK: Extract provider information from the CSV below and return a JSON object.
 
-INPUT DATA (CSV):
+INPUT CSV:
 {csv_sample}
 
-INSTRUCTIONS:
-1. Parse the CSV and extract provider information
-2. Map data to: provider_id, name, specialty, phone, email, address, npi_number, license_number
-3. Clean data:
-   - Names: Title Case
-   - Emails: lowercase
-   - Phones: digits only with optional + prefix
-   - Addresses: single normalized string
-   - Fix specialty typos
-4. Extract fields from free text (e.g., 'NPI 1234' or 'CA license 9999')
-5. For each field, provide a confidence score (0.0-1.0)
-6. Document all changes in ai_notes array
-7. Use null for missing values (not empty strings)
-8. ALWAYS return valid JSON only. NO explanations or markdown.
+STRICT OUTPUT FORMAT REQUIRED:
+You must return a valid JSON object with a single key "providers" containing a list of objects.
+Do not include any explanation, markdown formatting, or text outside the JSON.
 
-OUTPUT FORMAT:
+Expected JSON Structure:
 {{
   "providers": [
     {{
-      "provider_id": "string or null",
-      "name": "string or null",
-      "specialty": "string or null",
-      "phone": "string or null",
-      "email": "string or null",
-      "address": "string or null",
-      "npi_number": "string or null",
-      "license_number": "string or null",
+      "provider_id": "generated_id",
+      "name": "Dr. John Doe",
+      "specialty": "Cardiology",
+      "phone": "+15550000000",
+      "email": "john@example.com",
+      "address": "123 Main St, City, ST",
+      "npi_number": "1234567890",
+      "license_number": "CA12345",
       "confidence": {{
-        "provider_id": 0.90,
-        "name": 0.95,
-        "specialty": 0.85,
-        "phone": 0.90,
-        "email": 0.92,
-        "address": 0.88,
-        "npi_number": 0.99,
-        "license_number": 0.87
+        "provider_id": 1.0,
+        "name": 1.0,
+        "specialty": 1.0,
+        "phone": 1.0,
+        "email": 1.0,
+        "address": 1.0,
+        "npi_number": 1.0,
+        "license_number": 1.0
       }},
-      "ai_notes": ["sample note"],
-      "source_row": 0
+      "ai_notes": ["Extracted from column A"],
+      "source_row": 1
     }}
   ]
 }}
+
+PROCESSING RULES:
+1. Extract ALL rows from the CSV.
+2. Normalize names to Title Case.
+3. Clean phone numbers (remove dashes/parens).
+4. Assign a confidence score (0.0 to 1.0) for each field based on extraction quality.
+5. If a field is missing, use null.
+6. Return ONLY the JSON object.
 """
     return prompt
 
@@ -220,8 +220,14 @@ def post_process_providers(providers: List[Dict[str, Any]]) -> List[CleanedProvi
         if not provider_data.get("provider_id"):
             provider_data["provider_id"] = generate_temp_id()
 
+        # Handle confidence scores - ensure all fields have numeric values
         if "confidence" not in provider_data:
             provider_data["confidence"] = {field: 0.5 for field in STANDARD_FIELDS}
+        else:
+            # Replace None values with 0.5
+            for field in STANDARD_FIELDS:
+                if field not in provider_data["confidence"] or provider_data["confidence"][field] is None:
+                    provider_data["confidence"][field] = 0.5
 
         for field in STANDARD_FIELDS:
             if field not in provider_data or provider_data[field] == "":
@@ -237,6 +243,7 @@ def post_process_providers(providers: List[Dict[str, Any]]) -> List[CleanedProvi
             processed.append(CleanedProvider(**provider_data))
         except Exception as e:
             print(f"Warning: provider validation failed: {e}")
+            print(f"Provider data: {str(provider_data)[:200]}")
             continue
     return processed
 
@@ -274,7 +281,16 @@ async def ingest_csv(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail="CSV file contains no rows.")
 
     prompt = prepare_prompt_from_csv(df)
-    llm_response = await call_llm_with_retries(prompt)
+    
+    # Try LLM call with detailed error logging
+    try:
+        print(f"[INGESTION] Calling LLM with {len(df)} rows...")
+        llm_response = await call_llm_with_retries(prompt)
+        print(f"[INGESTION] LLM response received: {str(llm_response)[:200]}")
+    except Exception as e:
+        error_msg = f"LLM call failed: {str(e)}"
+        print(f"[INGESTION ERROR] {error_msg}")
+        raise HTTPException(status_code=500, detail=error_msg)
 
     # Handle case where LLM returns just a list
     if isinstance(llm_response, list):
@@ -289,9 +305,18 @@ async def ingest_csv(file: UploadFile = File(...)):
                 break
 
     if "providers" not in llm_response or not isinstance(llm_response["providers"], list):
-        raise HTTPException(status_code=500, detail=f"LLM output missing 'providers' list. Got: {str(llm_response)[:200]}")
+        error_detail = f"LLM output missing 'providers' list. Got: {str(llm_response)[:500]}"
+        print(f"[INGESTION ERROR] {error_detail}")
+        raise HTTPException(status_code=500, detail=error_detail)
 
-    providers = post_process_providers(llm_response["providers"])
+    # Process providers with error handling
+    try:
+        providers = post_process_providers(llm_response["providers"])
+        print(f"[INGESTION] Successfully processed {len(providers)} providers")
+    except Exception as e:
+        error_msg = f"Post-processing failed: {str(e)}"
+        print(f"[INGESTION ERROR] {error_msg}")
+        raise HTTPException(status_code=500, detail=error_msg)
 
     return IngestionResponse(
         status="success",

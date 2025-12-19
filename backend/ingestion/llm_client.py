@@ -65,7 +65,8 @@ def generate(prompt: str, response_model: Any = None) -> str:
         payload = {
             "model": model_name,
             "prompt": prompt,
-            "stream": False
+            "stream": False,
+            "format": "json"
         }
         
         try:
