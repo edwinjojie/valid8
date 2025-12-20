@@ -1,6 +1,6 @@
 "use client"
 
-import { FileUp, BarChart3, CheckCircle2, FileText, Video } from "lucide-react"
+import { FileUp, BarChart3, CheckCircle2, FileText, Video, History } from "lucide-react"
 
 interface SidebarProps {
   open: boolean
@@ -16,6 +16,7 @@ export default function Sidebar({ open, setOpen, currentPage, setCurrentPage }: 
     { id: "upload", label: "Upload", icon: FileUp },
     { id: "progress", label: "Progress", icon: CheckCircle2 },
     { id: "results", label: "Results", icon: CheckCircle2 },
+    { id: "history", label: "History", icon: History },
     { id: "reports", label: "Reports", icon: FileText },
   ]
 

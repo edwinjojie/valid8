@@ -120,6 +120,19 @@ export default function ValidationProgressPage({ processingFile, onComplete }: V
 
   return (
     <div className="p-4 space-y-4 max-w-4xl mx-auto">
+      {/* Page Description */}
+      <Card className="stats-border bg-gradient-to-r from-blue-50/50 to-indigo-50/50 dark:from-blue-950/20 dark:to-indigo-950/20">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Zap className="w-5 h-5 text-primary" />
+            <CardTitle className="text-xl">Validation in Progress</CardTitle>
+          </div>
+          <CardDescription className="mt-2">
+            Your data is being processed through our AI-powered ingestion and NPI validation pipeline. Monitor real-time progress below.
+          </CardDescription>
+        </CardHeader>
+      </Card>
+
       {/* Overall Progress */}
       <Card className="stats-border border-primary/20 bg-blue-50/50 dark:bg-blue-950/20">
         <CardHeader>

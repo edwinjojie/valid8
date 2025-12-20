@@ -53,6 +53,19 @@ export default function UploadPage({ onUploadStart }: UploadPageProps) {
 
   return (
     <div className="p-4 space-y-4 max-w-4xl mx-auto">
+      {/* Page Description */}
+      <Card className="stats-border bg-gradient-to-r from-green-50/50 to-blue-50/50 dark:from-green-950/20 dark:to-blue-950/20">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Upload className="w-5 h-5 text-primary" />
+            <CardTitle className="text-xl">Upload Provider Data</CardTitle>
+          </div>
+          <CardDescription className="mt-2">
+            Upload CSV files containing healthcare provider information for AI-powered cleaning and NPI validation.
+          </CardDescription>
+        </CardHeader>
+      </Card>
+
       {/* Upload Zone */}
       <Card className="border-2 border-dashed stats-border">
         <CardContent className="p-0">

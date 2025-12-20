@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { BarChart3, FileUp, AlertCircle, CheckCircle2, Clock } from "lucide-react"
+import { BarChart3, FileUp, AlertCircle, CheckCircle2, Clock, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import Sidebar from "@/components/layout/sidebar"
@@ -12,6 +12,8 @@ import ResultsDashboardPage from "@/components/pages/results-dashboard-page"
 import ProviderDetailPage from "@/components/pages/provider-detail-page"
 import ReportsPage from "@/components/pages/reports-page"
 import DemoPage from "@/components/pages/demo-page"
+import HistoryPage from "@/components/pages/history-page"
+import { saveValidationJob, type ValidationJob } from "@/lib/storage"
 
 export default function Valid8Care() {
   const [currentPage, setCurrentPage] = useState("dashboard")
@@ -21,11 +23,46 @@ export default function Valid8Care() {
 
   const handleUploadStart = (file: File) => {
     setProcessingFile(file)
+    setAnalysisResults(null) // Clear previous results
     setCurrentPage("progress")
   }
 
   const handleProcessingComplete = (results: any) => {
     setAnalysisResults(results)
+
+    // Save to local storage
+    if (processingFile && results) {
+      const validatedProviders = results.validated_providers || []
+      const total = validatedProviders.length
+      const valid = validatedProviders.filter((p: any) => !p.requires_manual_review).length
+      const avgConf = validatedProviders.reduce((sum: number, p: any) =>
+        sum + (p.confidence_scores?.overall || 0), 0) / (total || 1)
+
+      const job: ValidationJob = {
+        jobId: `job_${Date.now()}`,
+        timestamp: Date.now(),
+        fileName: processingFile.name,
+        fileSize: processingFile.size,
+        status: 'completed',
+        results: results,
+        stats: {
+          totalProviders: total,
+          validCount: valid,
+          invalidCount: total - valid,
+          avgConfidence: avgConf
+        }
+      }
+
+      saveValidationJob(job)
+    }
+
+    // Clear processing file to prevent re-trigger bug
+    setProcessingFile(null)
+    setCurrentPage("results")
+  }
+
+  const handleViewHistoryJob = (job: ValidationJob) => {
+    setAnalysisResults(job.results)
     setCurrentPage("results")
   }
 
@@ -44,11 +81,32 @@ export default function Valid8Care() {
           {currentPage === "dashboard" && <DashboardPage setCurrentPage={setCurrentPage} />}
           {currentPage === "demo" && <DemoPage />}
           {currentPage === "upload" && <UploadPage onUploadStart={handleUploadStart} />}
-          {currentPage === "progress" && (
+          {currentPage === "progress" && processingFile && (
             <ValidationProgressPage
               processingFile={processingFile}
               onComplete={handleProcessingComplete}
             />
+          )}
+          {currentPage === "progress" && !processingFile && (
+            <div className="p-4 max-w-2xl mx-auto mt-12">
+              <Card className="stats-border">
+                <CardHeader>
+                  <div className="flex items-center gap-2">
+                    <Info className="w-5 h-5 text-primary" />
+                    <CardTitle>No Active Validation</CardTitle>
+                  </div>
+                  <CardDescription className="mt-2">
+                    There is no validation job currently running. Upload a file to start a new validation.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button onClick={() => setCurrentPage("upload")} className="w-full">
+                    <FileUp className="w-4 h-4 mr-2" />
+                    Go to Upload Page
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           )}
           {currentPage === "results" && (
             <ResultsDashboardPage
@@ -57,6 +115,7 @@ export default function Valid8Care() {
             />
           )}
           {currentPage === "detail" && <ProviderDetailPage onBack={() => setCurrentPage("results")} />}
+          {currentPage === "history" && <HistoryPage onViewResults={handleViewHistoryJob} />}
           {currentPage === "reports" && <ReportsPage />}
         </div>
       </div>
@@ -74,6 +133,19 @@ function DashboardPage({ setCurrentPage }: { setCurrentPage: (page: string) => v
 
   return (
     <div className="p-4 space-y-4">
+      {/* Page Description */}
+      <Card className="stats-border bg-gradient-to-r from-blue-50/50 to-purple-50/50 dark:from-blue-950/20 dark:to-purple-950/20">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <BarChart3 className="w-5 h-5 text-primary" />
+            <CardTitle className="text-xl">Dashboard Overview</CardTitle>
+          </div>
+          <CardDescription className="mt-2">
+            Monitor your validation metrics and quickly access key features. Start a new validation or review recent activity.
+          </CardDescription>
+        </CardHeader>
+      </Card>
+
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {stats.map((stat) => {
@@ -167,6 +239,7 @@ function getPageTitle(page: string): string {
     progress: "Validation Progress",
     results: "Results Dashboard",
     detail: "Provider Details",
+    history: "History",
     reports: "Reports",
   }
   return titles[page] || "Dashboard"

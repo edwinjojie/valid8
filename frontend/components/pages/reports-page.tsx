@@ -1,6 +1,6 @@
 "use client"
 
-import { Download, TrendingUp, TrendingDown } from "lucide-react"
+import { Download, TrendingUp, TrendingDown, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
@@ -41,6 +41,19 @@ export default function ReportsPage() {
 
   return (
     <div className="p-4 space-y-4">
+      {/* Page Description */}
+      <Card className="stats-border bg-gradient-to-r from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <FileText className="w-5 h-5 text-primary" />
+            <CardTitle className="text-xl">Reports & Analytics</CardTitle>
+          </div>
+          <CardDescription className="mt-2">
+            Generate comprehensive reports, track validation metrics over time, and export data for compliance and analysis.
+          </CardDescription>
+        </CardHeader>
+      </Card>
+
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {metrics.map((metric) => (

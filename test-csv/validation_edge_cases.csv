@@ -1,0 +1,6 @@
+Name,Specialty,NPI,Address,Phone
+"Mystery Dr","Unknown","MISSING","101 Secret St, Nowhere","555-000-0000"
+"Dr. Fake","Radiology","0000000000","999 Void Ave, Null City","555-111-1111"
+"","Oncology","1212121212","202 Empty Rd, Blanksville",""
+"Invalid NPI Provider","Neurology","ABC123XYZ","303 Alpha Way, Betatown","555-222-3333"
+"Dr. Longname Longspecialty Longaddress Longphone","Very Long Specialty That Might Wrap Or Break Things","1000000001","123 Extremely Long Street Name That Never Seems To End Drive Suite 999999, Supercalifragilisticexpialidocious City, WA 98001","555-555-5555"

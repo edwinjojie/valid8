@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Download, CheckCircle2, AlertTriangle, FileText, ExternalLink } from "lucide-react"
+import { Download, CheckCircle2, AlertTriangle, FileText, ExternalLink, TrendingUp } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import {
   Table,
@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { downloadJSON, downloadCSV } from "@/lib/storage"
 
 interface ResultsDashboardPageProps {
   analysisResults?: any
@@ -30,8 +31,28 @@ export default function ResultsDashboardPage({ analysisResults, onViewDetail }: 
   const verified = validatedProviders.filter((p: any) => !p.requires_manual_review).length
   const reviewNeeded = total - verified
 
+  const handleDownloadJSON = () => {
+    downloadJSON(analysisResults, `validation_results_${Date.now()}.json`)
+  }
+
+  const handleDownloadCSV = () => {
+    downloadCSV(cleanedProviders, `cleaned_providers_${Date.now()}.csv`)
+  }
+
   return (
     <div className="p-4 space-y-4 max-w-6xl mx-auto">
+      {/* Page Description */}
+      <Card className="stats-border bg-gradient-to-r from-green-50/50 to-emerald-50/50 dark:from-green-950/20 dark:to-emerald-950/20">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-primary" />
+            <CardTitle className="text-xl">Validation Results</CardTitle>
+          </div>
+          <CardDescription className="mt-2">
+            Review AI-cleaned data, validation results, and discrepancies. Download reports or analyze individual providers.
+          </CardDescription>
+        </CardHeader>
+      </Card>
 
       {/* Top Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -189,11 +210,14 @@ export default function ResultsDashboardPage({ analysisResults, onViewDetail }: 
                 <div className="flex items-center gap-3">
                   <FileText className="w-8 h-8 text-primary" />
                   <div>
-                    <h4 className="font-medium">Summary Report (PDF)</h4>
-                    <p className="text-xs text-muted-foreground">Includes charts and risk summaries.</p>
+                    <h4 className="font-medium">Full Results (JSON)</h4>
+                    <p className="text-xs text-muted-foreground">Complete validation data including all metadata.</p>
                   </div>
                 </div>
-                <Button variant="outline">Download</Button>
+                <Button onClick={handleDownloadJSON} disabled={!analysisResults}>
+                  <Download className="w-4 h-4 mr-2" />
+                  Download
+                </Button>
               </div>
 
               <div className="p-4 bg-muted/30 rounded border border-border flex items-center justify-between">
@@ -201,10 +225,13 @@ export default function ResultsDashboardPage({ analysisResults, onViewDetail }: 
                   <ExternalLink className="w-8 h-8 text-green-600" />
                   <div>
                     <h4 className="font-medium">Cleaned Data (CSV)</h4>
-                    <p className="text-xs text-muted-foreground">Raw cleaned data ready for import.</p>
+                    <p className="text-xs text-muted-foreground">AI-cleaned provider data ready for import.</p>
                   </div>
                 </div>
-                <Button>Download CSV</Button>
+                <Button onClick={handleDownloadCSV} disabled={!cleanedProviders || cleanedProviders.length === 0}>
+                  <Download className="w-4 h-4 mr-2" />
+                  Download CSV
+                </Button>
               </div>
             </CardContent>
           </Card>
