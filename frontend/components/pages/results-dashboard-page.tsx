@@ -83,7 +83,7 @@ export default function ResultsDashboardPage({ analysisResults, onViewDetail }: 
                 <TableBody>
                   {cleanedProviders.map((p: any, i: number) => (
                     <TableRow key={i}>
-                      <TableCell className="font-medium">{p.first_name || ""} {p.last_name || ""}</TableCell>
+                      <TableCell className="font-medium">{p.name || "N/A"}</TableCell>
                       <TableCell>{p.specialty || "N/A"}</TableCell>
                       <TableCell>{p.npi_number || "MISSING"}</TableCell>
                       <TableCell>{p.phone || "N/A"}</TableCell>
@@ -118,9 +118,7 @@ export default function ResultsDashboardPage({ analysisResults, onViewDetail }: 
               <div className="space-y-4">
                 {validatedProviders.map((res: any, i: number) => {
                   // Attempt to reconstruct provider name from inputs or updates
-                  const name = res.updated_fields?.first_name
-                    ? `${res.updated_fields.first_name} ${res.updated_fields.last_name}`
-                    : "Unknown Provider"
+                  const name = res.updated_fields?.name || "Unknown Provider"
 
                   const hasIssues = res.requires_manual_review
                   const issues = res.discrepancies || []
