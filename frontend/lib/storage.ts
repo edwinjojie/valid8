@@ -39,13 +39,43 @@ export function saveValidationJob(jobData: ValidationJob): void {
 export function getValidationHistory(): ValidationJob[] {
     try {
         const stored = localStorage.getItem(STORAGE_KEY)
-        if (!stored) return []
+
+        // If no history exists, load seed data from static file
+        if (!stored) {
+            const seeded = localStorage.getItem('valid8_seeded')
+            if (!seeded) {
+                // Load seed data on first visit
+                loadSeedData()
+                const newStored = localStorage.getItem(STORAGE_KEY)
+                if (newStored) {
+                    const parsed = JSON.parse(newStored)
+                    return Array.isArray(parsed) ? parsed : []
+                }
+            }
+            return []
+        }
 
         const parsed = JSON.parse(stored)
         return Array.isArray(parsed) ? parsed : []
     } catch (error) {
         console.error('Failed to retrieve validation history:', error)
         return []
+    }
+}
+
+async function loadSeedData() {
+    try {
+        const response = await fetch('/seed-history.json')
+        if (response.ok) {
+            const seedData = await response.json()
+            if (Array.isArray(seedData) && seedData.length > 0) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(seedData))
+                localStorage.setItem('valid8_seeded', 'true')
+                console.log('Loaded seed history data:', seedData.length, 'jobs')
+            }
+        }
+    } catch (error) {
+        console.error('Failed to load seed data:', error)
     }
 }
 

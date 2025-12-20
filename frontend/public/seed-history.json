@@ -1,0 +1,2021 @@
+[
+    {
+        "jobId": "job_1766220089527",
+        "timestamp": 1766220089527,
+        "fileName": "standard_providers.csv",
+        "fileSize": 554,
+        "status": "completed",
+        "results": {
+            "status": "success",
+            "cleaned_count": 5,
+            "validated_count": 5,
+            "cleaned_providers": [
+                {
+                    "provider_id": "prov_1",
+                    "name": "Dr. Sarah Smith",
+                    "specialty": "Cardiology",
+                    "phone": "+15551234567",
+                    "email": null,
+                    "address": "123 Medical Plaza, New York, NY 10001",
+                    "npi_number": "1234567890",
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 1,
+                    "validation": null
+                },
+                {
+                    "provider_id": "prov_2",
+                    "name": "John Doe, MD",
+                    "specialty": "Internal Medicine",
+                    "phone": "+15559876543",
+                    "email": null,
+                    "address": "456 Wellness Blvd, Los Angeles, CA 90001",
+                    "npi_number": "1987654321",
+                    "license_number": "CA12345",
+                    "confidence": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 1
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 2,
+                    "validation": null
+                },
+                {
+                    "provider_id": "prov_3",
+                    "name": "Alice Johnson",
+                    "specialty": "Pediatrics",
+                    "phone": "+15552345678",
+                    "email": null,
+                    "address": "789 Care Lane, Chicago, IL 60601",
+                    "npi_number": "1122334455",
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 3,
+                    "validation": null
+                },
+                {
+                    "provider_id": "prov_4",
+                    "name": "Dr. Robert Brown",
+                    "specialty": "Orthopedics",
+                    "phone": "+15553456789",
+                    "email": null,
+                    "address": "321 Bone Dr, Houston, TX 77001",
+                    "npi_number": "1556677889",
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 4,
+                    "validation": null
+                },
+                {
+                    "provider_id": "prov_5",
+                    "name": "Emily Davis, NP",
+                    "specialty": "Family Medicine",
+                    "phone": "+15554567890",
+                    "email": null,
+                    "address": "654 Health Ct, Miami, FL 33101",
+                    "npi_number": "1998877665",
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 5,
+                    "validation": null
+                }
+            ],
+            "validated_providers": [
+                {
+                    "updated_fields": {
+                        "npi_number": ""
+                    },
+                    "discrepancies": [
+                        "Invalid NPI - No match found in registry",
+                        "Missing NPI Number"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI number not found in external reference data",
+                        "Error resolving NPI registry"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": ""
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 1
+                    },
+                    "validation_notes": [
+                        "NPI Number missing from INPUT_PROVIDER_DATA.",
+                        "Error encountered while verifying NPI in EXTERNAL_REFERENCE_DATA."
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": null
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1
+                    },
+                    "validation_notes": [
+                        "NPI number not found in external reference data",
+                        "Error resolving NPI registry"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": null,
+                        "license_number": null
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI not found in external reference data",
+                        "Unable to connect to NPI registry"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": "Invalid NPI - No match found in registry"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 0
+                    },
+                    "validation_notes": [
+                        "Error communicating with NPI registry",
+                        "NPI number was provided but no match found"
+                    ],
+                    "requires_manual_review": true
+                }
+            ],
+            "results": [
+                {
+                    "updated_fields": {
+                        "npi_number": ""
+                    },
+                    "discrepancies": [
+                        "Invalid NPI - No match found in registry",
+                        "Missing NPI Number"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI number not found in external reference data",
+                        "Error resolving NPI registry"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": ""
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 1
+                    },
+                    "validation_notes": [
+                        "NPI Number missing from INPUT_PROVIDER_DATA.",
+                        "Error encountered while verifying NPI in EXTERNAL_REFERENCE_DATA."
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": null
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1
+                    },
+                    "validation_notes": [
+                        "NPI number not found in external reference data",
+                        "Error resolving NPI registry"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": null,
+                        "license_number": null
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI not found in external reference data",
+                        "Unable to connect to NPI registry"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": "Invalid NPI - No match found in registry"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 0
+                    },
+                    "validation_notes": [
+                        "Error communicating with NPI registry",
+                        "NPI number was provided but no match found"
+                    ],
+                    "requires_manual_review": true
+                }
+            ]
+        },
+        "stats": {
+            "totalProviders": 5,
+            "validCount": 0,
+            "invalidCount": 5,
+            "avgConfidence": 0
+        }
+    },
+    {
+        "jobId": "job_1766219964495",
+        "timestamp": 1766219964495,
+        "fileName": "messy_data.csv",
+        "fileSize": 453,
+        "status": "completed",
+        "results": {
+            "status": "success",
+            "cleaned_count": 5,
+            "validated_count": 5,
+            "cleaned_providers": [
+                {
+                    "provider_id": "generated_id_001",
+                    "name": "Sarah Smith",
+                    "specialty": "Cardiology",
+                    "phone": "+15551234567",
+                    "email": null,
+                    "address": "123 Medical Plaza, NY",
+                    "npi_number": "1234567890",
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 1,
+                    "validation": null
+                },
+                {
+                    "provider_id": "generated_id_002",
+                    "name": "John Doe",
+                    "specialty": "Internal Med",
+                    "phone": "+15559987654",
+                    "email": null,
+                    "address": "456 Wellness Blvd, LA",
+                    "npi_number": "1987654321",
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 2,
+                    "validation": null
+                },
+                {
+                    "provider_id": "generated_id_003",
+                    "name": "Alice Johnson",
+                    "specialty": "Peds",
+                    "phone": "+15552345678",
+                    "email": null,
+                    "address": "789 Care Lane, Chicago",
+                    "npi_number": "1122334455",
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 3,
+                    "validation": null
+                },
+                {
+                    "provider_id": "generated_id_004",
+                    "name": "Robert Brown",
+                    "specialty": "Ortho",
+                    "phone": "+15553456789",
+                    "email": null,
+                    "address": "321 Bone Dr, Houston",
+                    "npi_number": "1556677889",
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 4,
+                    "validation": null
+                },
+                {
+                    "provider_id": "generated_id_005",
+                    "name": "Emily Davis",
+                    "specialty": "NP - Fam Med",
+                    "phone": "+15554567890",
+                    "email": null,
+                    "address": "Miami, FL 33101",
+                    "npi_number": "1998877665",
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 5,
+                    "validation": null
+                }
+            ],
+            "validated_providers": [
+                {
+                    "updated_fields": {},
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "npi_number": 0,
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "license_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI number not found in external reference data.",
+                        "Unable to verify NPI due to external service error."
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": "1987654321",
+                        "confidence.npi_number": 0
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI Number not found in registry due to DNS resolution error"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": "1122334455"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI number missing from input data",
+                        "No match found in NPI registry for provided NPI number"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": "1556677889"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 0.5,
+                        "license_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI number not found in external reference data due to error",
+                        "Please verify NPI number and address"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": null,
+                        "license_number": null
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI Number not found in registry due to external reference data error.",
+                        "No NPI provided, so no confidence can be assigned."
+                    ],
+                    "requires_manual_review": true
+                }
+            ],
+            "results": [
+                {
+                    "updated_fields": {},
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "npi_number": 0,
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "license_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI number not found in external reference data.",
+                        "Unable to verify NPI due to external service error."
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": "1987654321",
+                        "confidence.npi_number": 0
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI Number not found in registry due to DNS resolution error"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": "1122334455"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI number missing from input data",
+                        "No match found in NPI registry for provided NPI number"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": "1556677889"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 0.5,
+                        "license_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI number not found in external reference data due to error",
+                        "Please verify NPI number and address"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": null,
+                        "license_number": null
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI Number not found in registry due to external reference data error.",
+                        "No NPI provided, so no confidence can be assigned."
+                    ],
+                    "requires_manual_review": true
+                }
+            ]
+        },
+        "stats": {
+            "totalProviders": 5,
+            "validCount": 0,
+            "invalidCount": 5,
+            "avgConfidence": 0
+        }
+    },
+    {
+        "jobId": "job_1766219526156",
+        "timestamp": 1766219526156,
+        "fileName": "batch_test_10.csv",
+        "fileSize": 1086,
+        "status": "completed",
+        "results": {
+            "status": "success",
+            "cleaned_count": 10,
+            "validated_count": 10,
+            "cleaned_providers": [
+                {
+                    "provider_id": "generated_id_00001",
+                    "name": "Dr. James Wilson",
+                    "specialty": "Oncology",
+                    "phone": "6175551001",
+                    "email": null,
+                    "address": "101 Cancer Center Way, Boston, MA 02118",
+                    "npi_number": "1457896321",
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 0.5,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0.5
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 1,
+                    "validation": null
+                },
+                {
+                    "provider_id": "generated_id_00002",
+                    "name": "Lisa Ray, MD",
+                    "specialty": "Dermatology",
+                    "phone": "6025552002",
+                    "email": null,
+                    "address": "202 Skin Care Blvd, Phoenix, AZ 85001",
+                    "npi_number": "1678945231",
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 0.5,
+                        "name": 0.8,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0.5
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 2,
+                    "validation": null
+                },
+                {
+                    "provider_id": "generated_id_00003",
+                    "name": "Dr. Michael Chang",
+                    "specialty": "Neurology",
+                    "phone": "2065553003",
+                    "email": null,
+                    "address": "303 Brain Health Dr, Seattle, WA 98104",
+                    "npi_number": "1894561237",
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 0.5,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0.5
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 3,
+                    "validation": null
+                },
+                {
+                    "provider_id": "generated_id_00004",
+                    "name": "Susan Miller, NP",
+                    "specialty": "Psychiatry",
+                    "phone": "3035554004",
+                    "email": null,
+                    "address": "404 Mind Plaza, Denver, CO 80202",
+                    "npi_number": "1123456789",
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 0.5,
+                        "name": 0.8,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0.5
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 4,
+                    "validation": null
+                },
+                {
+                    "provider_id": "generated_id_00005",
+                    "name": "Dr. David Miller",
+                    "specialty": "Internal Medicine",
+                    "phone": "2155555005",
+                    "email": null,
+                    "address": "505 City Hospital, Philadelphia, PA 19107",
+                    "npi_number": "1239874560",
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 0.5,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0.5
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 5,
+                    "validation": null
+                },
+                {
+                    "provider_id": "generated_id_00006",
+                    "name": "Karen Thompson",
+                    "specialty": "Urology",
+                    "phone": "4045556006",
+                    "email": null,
+                    "address": "606 Urology Clinic, Atlanta, GA 30303",
+                    "npi_number": "1564738291",
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 0.5,
+                        "name": 0.8,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0.5
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 6,
+                    "validation": null
+                },
+                {
+                    "provider_id": "generated_id_00007",
+                    "name": "Dr. Kevin White",
+                    "specialty": "Anesthesiology",
+                    "phone": "2145557007",
+                    "email": null,
+                    "address": "707 Surgery Way, Dallas, TX 75201",
+                    "npi_number": "1782934650",
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 0.5,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0.5
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 7,
+                    "validation": null
+                },
+                {
+                    "provider_id": "generated_id_00008",
+                    "name": "Maria Garcia, MD",
+                    "specialty": "Obstetrics/Gynecology",
+                    "phone": "3055558008",
+                    "email": null,
+                    "address": "808 Women's Health, Miami, FL 33101",
+                    "npi_number": "1192837465",
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 0.5,
+                        "name": 0.8,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0.5
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 8,
+                    "validation": null
+                },
+                {
+                    "provider_id": "generated_id_00009",
+                    "name": "Dr. Steven Hall",
+                    "specialty": "Gastroenterology",
+                    "phone": "4155559009",
+                    "email": null,
+                    "address": "909 Digestive Dr, San Francisco, CA 94102",
+                    "npi_number": "1223344556",
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 0.5,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0.5
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 9,
+                    "validation": null
+                },
+                {
+                    "provider_id": "generated_id_00010",
+                    "name": "Nancy Allen, NP",
+                    "specialty": "Geriatrics",
+                    "phone": "8135551010",
+                    "email": null,
+                    "address": "1010 Senior Living, Tampa, FL 33602",
+                    "npi_number": "1334455667",
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 0.5,
+                        "name": 0.8,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0.5
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 10,
+                    "validation": null
+                }
+            ],
+            "validated_providers": [
+                {
+                    "updated_fields": {
+                        "name": "Dr. James Wilson",
+                        "specialty": "Oncology"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 0.5
+                    },
+                    "validation_notes": [
+                        "No NPI number found in input data. Could not validate with external reference data."
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": "1678945231"
+                    },
+                    "discrepancies": [
+                        "Invalid NPI - No match found in registry",
+                        "Missing NPI Number"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "name": 0.8,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 0.5
+                    },
+                    "validation_notes": [
+                        "NPI not found in external reference data",
+                        "Missing NPI Number, requires manual review"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": null,
+                        "confidence.npi_number": 0
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI Number missing from provider data.",
+                        "No match found in NPI registry."
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "name": "Susan Miller, NP",
+                        "specialty": "Psychiatry"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "name": 0.8,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 0.5
+                    },
+                    "validation_notes": [
+                        "NPI number not found in external reference data.",
+                        "External reference data is empty, unable to verify NPI."
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "name": "Dr. David Miller",
+                        "specialty": "Internal Medicine",
+                        "phone": "2155555005",
+                        "email": null,
+                        "address": "505 City Hospital, Philadelphia, PA 19107"
+                    },
+                    "discrepancies": [
+                        {
+                            "field": "npi_number",
+                            "reason": "Missing NPI Number"
+                        }
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 0
+                    },
+                    "validation_notes": [
+                        {
+                            "field": "npi_number",
+                            "message": "Missing NPI Number"
+                        },
+                        {
+                            "field": "requires_manual_review",
+                            "message": "Requires manual review due to missing NPI"
+                        }
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": "1564738291",
+                        "confidence.npi_number": 0.8,
+                        "requires_manual_review": true
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "name": 0.8,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 0.8
+                    },
+                    "validation_notes": [
+                        "Requires manual review due to missing NPI number",
+                        "Confidence score for npi_number reduced"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "confidence_scores": {
+                            "provider_id": 0.5,
+                            "name": 1,
+                            "specialty": 1,
+                            "phone": 1,
+                            "email": 0.5,
+                            "address": 1,
+                            "npi_number": 1,
+                            "license_number": 0.5
+                        }
+                    },
+                    "discrepancies": [
+                        {
+                            "field": "provider_id",
+                            "description": "Generated ID, needs manual verification"
+                        },
+                        {
+                            "field": "name",
+                            "description": "Extracted from document, needs human review"
+                        },
+                        {
+                            "field": "specialty",
+                            "description": "Mapped from taxonomy, confidence: 0.9"
+                        },
+                        {
+                            "field": "phone",
+                            "description": "Extracted from text, confidence: 1.0"
+                        },
+                        {
+                            "field": "email",
+                            "description": "Missing value, needs human input"
+                        },
+                        {
+                            "field": "address",
+                            "description": "Geocoded from string, confidence: 1.0"
+                        }
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0.5
+                    },
+                    "validation_notes": [
+                        {
+                            "field": "name",
+                            "description": "Name extracted from document: Dr. Kevin White"
+                        }
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": "1192837465"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "name": 0.8,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 0.9
+                    },
+                    "validation_notes": [
+                        "No external reference data available to validate NPI number."
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "name": "Dr. Steven Hall",
+                        "specialty": "Gastroenterology"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1
+                    },
+                    "validation_notes": [
+                        {
+                            "field_name": "npi_number",
+                            "change": "missing value"
+                        },
+                        {
+                            "field_name": "npi_number",
+                            "change": "no match found in registry"
+                        }
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "name": "Nancy Allen",
+                        "specialty": "Geriatrics"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "npi_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI not found in external reference data."
+                    ],
+                    "requires_manual_review": true
+                }
+            ],
+            "results": [
+                {
+                    "updated_fields": {
+                        "name": "Dr. James Wilson",
+                        "specialty": "Oncology"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 0.5
+                    },
+                    "validation_notes": [
+                        "No NPI number found in input data. Could not validate with external reference data."
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": "1678945231"
+                    },
+                    "discrepancies": [
+                        "Invalid NPI - No match found in registry",
+                        "Missing NPI Number"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "name": 0.8,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 0.5
+                    },
+                    "validation_notes": [
+                        "NPI not found in external reference data",
+                        "Missing NPI Number, requires manual review"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": null,
+                        "confidence.npi_number": 0
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI Number missing from provider data.",
+                        "No match found in NPI registry."
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "name": "Susan Miller, NP",
+                        "specialty": "Psychiatry"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "name": 0.8,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": 0.5
+                    },
+                    "validation_notes": [
+                        "NPI number not found in external reference data.",
+                        "External reference data is empty, unable to verify NPI."
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "name": "Dr. David Miller",
+                        "specialty": "Internal Medicine",
+                        "phone": "2155555005",
+                        "email": null,
+                        "address": "505 City Hospital, Philadelphia, PA 19107"
+                    },
+                    "discrepancies": [
+                        {
+                            "field": "npi_number",
+                            "reason": "Missing NPI Number"
+                        }
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 0
+                    },
+                    "validation_notes": [
+                        {
+                            "field": "npi_number",
+                            "message": "Missing NPI Number"
+                        },
+                        {
+                            "field": "requires_manual_review",
+                            "message": "Requires manual review due to missing NPI"
+                        }
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": "1564738291",
+                        "confidence.npi_number": 0.8,
+                        "requires_manual_review": true
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "name": 0.8,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 0.8
+                    },
+                    "validation_notes": [
+                        "Requires manual review due to missing NPI number",
+                        "Confidence score for npi_number reduced"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "confidence_scores": {
+                            "provider_id": 0.5,
+                            "name": 1,
+                            "specialty": 1,
+                            "phone": 1,
+                            "email": 0.5,
+                            "address": 1,
+                            "npi_number": 1,
+                            "license_number": 0.5
+                        }
+                    },
+                    "discrepancies": [
+                        {
+                            "field": "provider_id",
+                            "description": "Generated ID, needs manual verification"
+                        },
+                        {
+                            "field": "name",
+                            "description": "Extracted from document, needs human review"
+                        },
+                        {
+                            "field": "specialty",
+                            "description": "Mapped from taxonomy, confidence: 0.9"
+                        },
+                        {
+                            "field": "phone",
+                            "description": "Extracted from text, confidence: 1.0"
+                        },
+                        {
+                            "field": "email",
+                            "description": "Missing value, needs human input"
+                        },
+                        {
+                            "field": "address",
+                            "description": "Geocoded from string, confidence: 1.0"
+                        }
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 1,
+                        "license_number": 0.5
+                    },
+                    "validation_notes": [
+                        {
+                            "field": "name",
+                            "description": "Name extracted from document: Dr. Kevin White"
+                        }
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": "1192837465"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "name": 0.8,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1,
+                        "npi_number": 0.9
+                    },
+                    "validation_notes": [
+                        "No external reference data available to validate NPI number."
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "name": "Dr. Steven Hall",
+                        "specialty": "Gastroenterology"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 0.5,
+                        "address": 1
+                    },
+                    "validation_notes": [
+                        {
+                            "field_name": "npi_number",
+                            "change": "missing value"
+                        },
+                        {
+                            "field_name": "npi_number",
+                            "change": "no match found in registry"
+                        }
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "name": "Nancy Allen",
+                        "specialty": "Geriatrics"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0.5,
+                        "npi_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI not found in external reference data."
+                    ],
+                    "requires_manual_review": true
+                }
+            ]
+        },
+        "stats": {
+            "totalProviders": 10,
+            "validCount": 0,
+            "invalidCount": 10,
+            "avgConfidence": 0
+        }
+    },
+    {
+        "jobId": "job_1766219032669",
+        "timestamp": 1766219032669,
+        "fileName": "sample_messy_providers.csv",
+        "fileSize": 759,
+        "status": "completed",
+        "results": {
+            "status": "success",
+            "cleaned_count": 5,
+            "validated_count": 5,
+            "cleaned_providers": [
+                {
+                    "provider_id": "P001",
+                    "name": "Dr. John Smith",
+                    "specialty": "Cardiology Specialist",
+                    "phone": "+15551234567",
+                    "email": "JOHN.SMITH@HEALTH.COM",
+                    "address": null,
+                    "npi_number": "1234567890",
+                    "license_number": "CA-45678",
+                    "confidence": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 1,
+                        "address": 0.5,
+                        "npi_number": 1,
+                        "license_number": 1
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 1,
+                    "validation": null
+                },
+                {
+                    "provider_id": "P002",
+                    "name": "Jane Doe, MD",
+                    "specialty": "Pediatrican",
+                    "phone": "+15559876543",
+                    "email": "jane.doe@hospital.org",
+                    "address": null,
+                    "npi_number": null,
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 1,
+                        "address": 0.5,
+                        "npi_number": 0.5,
+                        "license_number": 0.5
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 2,
+                    "validation": null
+                },
+                {
+                    "provider_id": "P003",
+                    "name": "Dr. Sarah Williams - Dermatology",
+                    "specialty": "Dermatology",
+                    "phone": "+15554445555",
+                    "email": "sarah.w@derma.com",
+                    "address": null,
+                    "npi_number": "9998887777",
+                    "license_number": "CA12345",
+                    "confidence": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 1,
+                        "address": 0.5,
+                        "npi_number": 1,
+                        "license_number": 1
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 4,
+                    "validation": null
+                },
+                {
+                    "provider_id": "P004",
+                    "name": "Dr. Michael Brown, DO",
+                    "specialty": "Cardiology (with typo)",
+                    "phone": "+15552223333",
+                    "email": "michael.brown@heart.org",
+                    "address": "456 Oak Ave, Suite 200, Portland OR",
+                    "npi_number": null,
+                    "license_number": null,
+                    "confidence": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 0.5,
+                        "phone": 1,
+                        "email": 1,
+                        "address": 1,
+                        "npi_number": 0.5,
+                        "license_number": 0.5
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 5,
+                    "validation": null
+                },
+                {
+                    "provider_id": "P005",
+                    "name": "Emily Davis, Oncology / Cancer Care",
+                    "specialty": "Oncology / Cancer Care",
+                    "phone": "+15557778888",
+                    "email": "emily.davis@cancer-center.com",
+                    "address": null,
+                    "npi_number": "3334445555",
+                    "license_number": "NY-87654",
+                    "confidence": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 1,
+                        "address": 0.5,
+                        "npi_number": 1,
+                        "license_number": 1
+                    },
+                    "ai_notes": [
+                        "Extracted from column A"
+                    ],
+                    "source_row": 6,
+                    "validation": null
+                }
+            ],
+            "validated_providers": [
+                {
+                    "updated_fields": {
+                        "name": "Dr. John Smith",
+                        "specialty": "Cardiology Specialist"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 1,
+                        "address": null,
+                        "npi_number": 0,
+                        "license_number": 1
+                    },
+                    "validation_notes": [
+                        "No external reference data available.",
+                        "NPI number provided but no match found in registry."
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": "",
+                        "license_number": ""
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 1,
+                        "address": 0.5,
+                        "npi_number": 0,
+                        "license_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI Number is missing and could not be validated.",
+                        "No NPI found in registry, requires manual review."
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "name": "Dr. Sarah Williams - Dermatology",
+                        "specialty": "Dermatology",
+                        "phone": "+15554445555",
+                        "email": "sarah.w@derma.com",
+                        "license_number": "CA12345"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 1,
+                        "address": 0.5,
+                        "npi_number": 0,
+                        "license_number": 1
+                    },
+                    "validation_notes": [
+                        "NPI number not found in external reference data",
+                        "Address is missing"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "name": "Dr. Michael Brown, DO",
+                        "phone": "+15552223333",
+                        "email": "michael.brown@heart.org",
+                        "address": "456 Oak Ave, Suite 200, Portland OR"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": null,
+                        "name": 1,
+                        "specialty": null,
+                        "phone": 1,
+                        "email": 1,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": null
+                    },
+                    "validation_notes": [
+                        "No NPI number provided",
+                        "NPI not found in external reference data"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "provider_id": "",
+                        "name": "",
+                        "specialty": "",
+                        "phone": "+15557778888",
+                        "email": "emily.davis@cancer-center.com",
+                        "address": null,
+                        "npi_number": "3334445555",
+                        "license_number": "NY-87654"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0,
+                        "name": 0,
+                        "specialty": 0,
+                        "phone": 1,
+                        "email": 1,
+                        "address": 0.5,
+                        "npi_number": 0,
+                        "license_number": 1
+                    },
+                    "validation_notes": [
+                        "No NPI match found in registry"
+                    ],
+                    "requires_manual_review": true
+                }
+            ],
+            "results": [
+                {
+                    "updated_fields": {
+                        "name": "Dr. John Smith",
+                        "specialty": "Cardiology Specialist"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 1,
+                        "address": null,
+                        "npi_number": 0,
+                        "license_number": 1
+                    },
+                    "validation_notes": [
+                        "No external reference data available.",
+                        "NPI number provided but no match found in registry."
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "npi_number": "",
+                        "license_number": ""
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 1,
+                        "address": 0.5,
+                        "npi_number": 0,
+                        "license_number": 0
+                    },
+                    "validation_notes": [
+                        "NPI Number is missing and could not be validated.",
+                        "No NPI found in registry, requires manual review."
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "name": "Dr. Sarah Williams - Dermatology",
+                        "specialty": "Dermatology",
+                        "phone": "+15554445555",
+                        "email": "sarah.w@derma.com",
+                        "license_number": "CA12345"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 1,
+                        "name": 1,
+                        "specialty": 1,
+                        "phone": 1,
+                        "email": 1,
+                        "address": 0.5,
+                        "npi_number": 0,
+                        "license_number": 1
+                    },
+                    "validation_notes": [
+                        "NPI number not found in external reference data",
+                        "Address is missing"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "name": "Dr. Michael Brown, DO",
+                        "phone": "+15552223333",
+                        "email": "michael.brown@heart.org",
+                        "address": "456 Oak Ave, Suite 200, Portland OR"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number",
+                        "Invalid NPI - No match found in registry"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": null,
+                        "name": 1,
+                        "specialty": null,
+                        "phone": 1,
+                        "email": 1,
+                        "address": 1,
+                        "npi_number": 0,
+                        "license_number": null
+                    },
+                    "validation_notes": [
+                        "No NPI number provided",
+                        "NPI not found in external reference data"
+                    ],
+                    "requires_manual_review": true
+                },
+                {
+                    "updated_fields": {
+                        "provider_id": "",
+                        "name": "",
+                        "specialty": "",
+                        "phone": "+15557778888",
+                        "email": "emily.davis@cancer-center.com",
+                        "address": null,
+                        "npi_number": "3334445555",
+                        "license_number": "NY-87654"
+                    },
+                    "discrepancies": [
+                        "Missing NPI Number"
+                    ],
+                    "confidence_scores": {
+                        "provider_id": 0,
+                        "name": 0,
+                        "specialty": 0,
+                        "phone": 1,
+                        "email": 1,
+                        "address": 0.5,
+                        "npi_number": 0,
+                        "license_number": 1
+                    },
+                    "validation_notes": [
+                        "No NPI match found in registry"
+                    ],
+                    "requires_manual_review": true
+                }
+            ]
+        },
+        "stats": {
+            "totalProviders": 5,
+            "validCount": 0,
+            "invalidCount": 5,
+            "avgConfidence": 0
+        }
+    }
+]
