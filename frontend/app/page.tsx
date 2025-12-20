@@ -11,6 +11,7 @@ import ValidationProgressPage from "@/components/pages/validation-progress-page"
 import ResultsDashboardPage from "@/components/pages/results-dashboard-page"
 import ProviderDetailPage from "@/components/pages/provider-detail-page"
 import ReportsPage from "@/components/pages/reports-page"
+import DemoPage from "@/components/pages/demo-page"
 
 export default function Valid8Care() {
   const [currentPage, setCurrentPage] = useState("dashboard")
@@ -41,6 +42,7 @@ export default function Valid8Care() {
         {/* Page Content */}
         <div className="flex-1 overflow-auto bg-background">
           {currentPage === "dashboard" && <DashboardPage setCurrentPage={setCurrentPage} />}
+          {currentPage === "demo" && <DemoPage />}
           {currentPage === "upload" && <UploadPage onUploadStart={handleUploadStart} />}
           {currentPage === "progress" && (
             <ValidationProgressPage
@@ -160,6 +162,7 @@ function DashboardPage({ setCurrentPage }: { setCurrentPage: (page: string) => v
 function getPageTitle(page: string): string {
   const titles: Record<string, string> = {
     dashboard: "Dashboard",
+    demo: "Demo",
     upload: "Upload File",
     progress: "Validation Progress",
     results: "Results Dashboard",

@@ -1,6 +1,6 @@
 "use client"
 
-import { FileUp, BarChart3, CheckCircle2, FileText } from "lucide-react"
+import { FileUp, BarChart3, CheckCircle2, FileText, Video } from "lucide-react"
 
 interface SidebarProps {
   open: boolean
@@ -12,6 +12,7 @@ interface SidebarProps {
 export default function Sidebar({ open, setOpen, currentPage, setCurrentPage }: SidebarProps) {
   const navItems = [
     { id: "dashboard", label: "Dashboard", icon: BarChart3 },
+    { id: "demo", label: "Demo", icon: Video },
     { id: "upload", label: "Upload", icon: FileUp },
     { id: "progress", label: "Progress", icon: CheckCircle2 },
     { id: "results", label: "Results", icon: CheckCircle2 },
